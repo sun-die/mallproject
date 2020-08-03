@@ -3,17 +3,16 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 //完整引入element-ui
-import Element from 'element-ui';
+import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-// Vue.use(ElementUI);
+Vue.use(ElementUI);
 // 全局配置element-ui
-Vue.use(Element, { size: 'small', zIndex: 3000 });
-
+// Vue.use(ElementUI, { size: 'small', zIndex: 3000 });
 Vue.config.productionTip = false
 
 new Vue({
-  el: '#app',
+ 
   router,
   store,
   render: h => h(App)
