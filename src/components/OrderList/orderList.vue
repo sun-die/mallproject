@@ -32,7 +32,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="address" label="操作">
-          <el-button type="primary">详情</el-button>
+          <el-button type="primary" @click="detailPage">详情</el-button>
       </el-table-column>
     </el-table>
     <!-- 分页区 -->
@@ -261,6 +261,10 @@ export default {
         //   console.log(err)
         // })
          this.userList = this.tableData
+      },
+      //详情页跳转
+      detailPage:function(){
+         this.$router.push('/orderDetails')
       }
   },
   //生命周期 - 创建完成（可以访问当前this实例）

@@ -19,6 +19,6 @@
    margin: 0;
 }
 body .el-table th.gutter{ /**表头对齐，不要删 */
-display: table-cell!important;
+  display: table-cell!important;
 }
 </style>

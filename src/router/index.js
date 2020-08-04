@@ -9,7 +9,25 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    children:[
+     {
+        path:'/orderList',
+        name:'orderList',
+        component:()=> import('../components/OrderList/orderList.vue')
+     },
+     {
+        path:'/orderDetails',
+        name:'orderDetails',
+        component:()=> import('../components/OrderList/orderDetails.vue')
+     },
+     {
+        path:'/couriers',
+        name:'courier',
+        component:()=> import('../components/OrderList/courier.vue')
+     },
+
+    ]
   },
  
   // {

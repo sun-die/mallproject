@@ -14,7 +14,7 @@
 
         <!-- 内容主体 -->
         <el-main>
-          <HomeMain></HomeMain>
+          <router-view/>
         </el-main>
       </el-container>
     </el-container>
