@@ -1,10 +1,6 @@
 <template>
   <div id="app">
     
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div> -->
     <router-view/>
   </div>
 </template>
@@ -22,5 +18,7 @@
    padding: 0;
    margin: 0;
 }
-
+body .el-table th.gutter{ /**表头对齐，不要删 */
+display: table-cell!important;
+}
 </style>

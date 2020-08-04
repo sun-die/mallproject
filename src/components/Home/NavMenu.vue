@@ -44,7 +44,7 @@
       <i class="el-icon-s-order"></i>
       <span slot="title">订单管理</span>
     </template>
-    <el-menu-item index="4-1">订单列表</el-menu-item>
+    <el-menu-item index="4-1" @click="dindanClick">订单列表</el-menu-item>
      <el-menu-item index="4-2">快递公司</el-menu-item>
   </el-submenu> 
 
@@ -85,6 +85,9 @@ methods: {
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      dindanClick(){
+        this.$router.push('/Home')
       }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
