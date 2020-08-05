@@ -44,7 +44,8 @@ Vue.use(VueRouter)
         {path:'/recommend/content',component:Content},
         {path:'/recommend/position',component:Position},
         {path:'/order/order',component:Order},
-        {path:'/order/express',component:Express}
+        {path:'/order/express',component:Express},
+        {path:'/order/order/detail',component:OrderDetail}
       ]
     }
   ]
