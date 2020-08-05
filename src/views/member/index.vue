@@ -135,7 +135,8 @@ export default {
 
          },
 
-         ]
+         ],
+          currentPage4: 4
     };
   },
   //监听属性 类似于data概念
@@ -150,6 +151,12 @@ export default {
 
           
         },
+          handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+      }
       
   },
   //生命周期 - 创建完成（可以访问当前this实例）
