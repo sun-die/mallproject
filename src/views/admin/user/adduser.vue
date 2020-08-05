@@ -9,27 +9,31 @@
       class="demo-ruleForm addform"
     >
       <el-form-item label="管理员账号" prop="name">
-        <el-input v-model="ruleForm.name"></el-input>
+        <el-input v-model="ruleForm.user_name"></el-input>
       </el-form-item>
       <el-form-item label="设置角色" prop="region">
-        <el-select placeholder="请选择"  class="addinput" v-model="ruleForm.region">
-          <el-option label="超管" value="shanghai"></el-option>
-          <el-option label="系统维护员" value="beijing"></el-option>
-          <el-option label="仓库管理员" value="beijing"></el-option>
+        <el-select placeholder="请选择"  class="addinput" v-model="ruleForm.role_id">
+          <!-- 循环渲染数据（必须 因为是动态的数据 且要按数据输出） -->
+          <el-option v-for="(role,i) in roles"
+              :key="i"
+              :label="role.role_name"
+              :value="role.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input v-model="ruleForm.password"></el-input>
       </el-form-item>
       <el-form-item label="真实姓名" prop="relname">
-        <el-input v-model="ruleForm.relname"></el-input>
+        <el-input v-model="ruleForm.real_name"></el-input>
       </el-form-item>
 
       <!-- 设置一个循环 -->
       <el-form-item label="是否启用">
         <el-radio-group v-model="ruleForm.status">
-            <el-radio border label="正常" class="userstatus"></el-radio>
-            <el-radio border label="停封"></el-radio>
+          <el-radio border
+              v-for="(la, i) in status"
+              :key="i"
+              :label="i">{{la}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item>
@@ -53,31 +57,32 @@ export default {
         return {
         ruleForm: {
             // 姓名
-            name: "",
-            // 设置角色
-            region: "",
+            user_name: "",
             // 是否启用
             status: 0,
             // 密码
             password: "",
             // 角色id
-            role_id:"",
+            role_id:1,
             // 账户id
             id:null,
+            // 真实姓名
+            real_name:"",
         },
         status:{},
+        roles: {},
         // 表单规则
         rules: {
             name: [
-            { required: true, message: "必填项", trigger: "blur" },
+            // { required: true, message: "必填项", trigger: "change" },
             { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
             ],
             relname: [
-            { required: true, message: "必填项", trigger: "change" },
+            // { required: true, message: "必填项", trigger: "change" },
             { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
             ],
             region: [
-            { required: true, message: "必选项", trigger: "blur" },
+            // { required: true, message: "必选项", trigger: "blur" },
             ],
             password: [
             { min:6, message: "最少输入六位数", trigger: "blur" },
@@ -92,23 +97,44 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    // 提交表单
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           alert("submit!");
-        //   跳转页面
+        //   发起添加用户的请求并跳转页面
+        this.$http.post("/user/userAdd",this.ruleForm
+        ).then(res=> {
+          // this.$message({
+          //   message:res.msg,
+          //   type:"success"
+          // })
+          this.$router.push('/admin/user')
+        })
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
+    // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    // 获取角色数据 渲染到页面
+    getRole() {
+      this.$http.get("/user/userAdd").then(res=> {
+        this.roles = res.data.role;
+        this.status = res.data.status;
+      })
+    }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+        this.$nextTick(() => {
+        this.getRole()
+    })
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
