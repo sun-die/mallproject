@@ -7,16 +7,13 @@
 </el-radio-group> -->
 
 
+    <Breadcrumb></Breadcrumb>
 
-
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <!-- <el-breadcrumb-item>
-        <a href="/">活动管理</a>
-      </el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>活动详情</el-breadcrumb-item> -->
-    </el-breadcrumb>
+    <!-- <el-breadcrumb separator="/">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>后台管理</el-breadcrumb-item>
+      <el-breadcrumb-item>后台管理列表</el-breadcrumb-item>
+    </el-breadcrumb> -->
 
     <!-- 弹出框 -->
     <div>
@@ -26,8 +23,8 @@
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>主页</el-dropdown-item>
-        <el-dropdown-item divided>退出</el-dropdown-item>
+        <el-dropdown-item><span @click="toPagetop">主页</span></el-dropdown-item>
+        <el-dropdown-item><span @click="toLogin">退出</span></el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
     </div>
@@ -38,9 +35,12 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import avatar from "@/assets/img/avatar.gif";
+import Breadcrumb from '../../components/Breadcrumb'
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+    Breadcrumb
+  },
   data() {
     //这里存放数据
     return {
@@ -52,7 +52,15 @@ export default {
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    toPagetop(){
+      this.$router.push("/pagetop")
+    },
+    toLogin(){
+      window.sessionStorage.clear();
+      this.$router.push("/login")
+    },
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）

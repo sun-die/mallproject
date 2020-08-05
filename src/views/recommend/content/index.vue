@@ -1,18 +1,17 @@
-<!--推荐位置管理--->
-<!--  -->
+<!--推荐内容管理-->
 <template>
   <div class>
     <!-- 标题 -->
     <el-row>
       <el-col :span="24">
-        <div class="title">推荐位置管理(请勿随意添加)</div>
+        <div class="title">推荐位内容管理</div>
       </el-col>
     </el-row>
     <!-- 添加按钮 -->
     <el-row>
       <el-col :span="24">
         <div class="add-buttom">
-          <el-button type="primary" @click="dialogFormVisible = true" plain>添加推荐位置</el-button>
+          <el-button type="primary" plain>添加推荐内容</el-button>
         </div>
       </el-col>
     </el-row>
@@ -25,8 +24,14 @@
       style="width: 100%"
     >
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
-      <el-table-column prop="name" label="分类名"></el-table-column>
-      <el-table-column label="操作" width="400">
+      <el-table-column prop="name" label="所属分类" width="200"></el-table-column>
+      <el-table-column prop="msg" label="推荐信息"></el-table-column>
+      <el-table-column prop="msg" label="推荐摘要"></el-table-column>
+      <el-table-column prop="picture" label="图片"></el-table-column>
+      <el-table-column prop="www" label="链接"></el-table-column>
+      <el-table-column prop="num" label="排序" width="60"></el-table-column>
+
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -34,20 +39,14 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <el-pagination :page-size="20" layout="total, prev, pager, next" :total="40"></el-pagination>
-
-    <!-- 添加推荐位 -->
-    <el-dialog title="添加推荐位" :visible.sync="dialogFormVisible" width="30%" text-align="left">
-      <!-- <span>这是一段信息</span> -->
-      <el-form :model="form" status-icon :rules="formRule" ref="cateForm" @submit.native.prevent>
-        <el-form-item label="添加推荐名" :label-width="formLabelWidth">
-          <el-input v-model="ruleForm.name"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
-      </span>
-    </el-dialog>
+        <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="currentPage1"
+      :page-size="20"
+      layout="total, prev, pager, next"
+      :total="40">
+    </el-pagination>
   </div>
 </template>
 
@@ -60,35 +59,7 @@ export default {
   components: {},
   data() {
     //这里存放数据
-    return {
-      tableData: [
-        {
-          id: 12,
-          name: "首页Baner",
-        },
-      ],
-      dialogFormVisible: false,
-      ruleForm: {
-        name: "",
-      },
-      form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
-      },
-      formRule: {
-        name: [
-          { required: true, massage: "请输入类名", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-      },
-      formLabelWidth: "120px",
-    };
+    return {};
   },
   //监听属性 类似于data概念
   computed: {},
@@ -96,30 +67,11 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    handleEdit: function () {},
-    handleDelete: function () {},
-    // 表头样式设置
     headClass() {
-      return "text-align: center; ";
+      return "text-align:center;";
     },
-    // 表格样式设置
     rowClass() {
-      return "text-align: center;";
-    },
-    //  点击添加按钮
-    addPosition() {
-      this.form.name = "";
-      this.dialogFormVisible = true;
-    },
-    onSubmit() {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+      return "text-align:center;";
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -146,8 +98,8 @@ export default {
   padding: 20px 0;
   text-align: left;
 }
-.el-pagination {
-  padding: 10px;
-  text-align: right;
+.el-pagination{
+    padding: 10px;
+    text-align: right;
 }
 </style>
