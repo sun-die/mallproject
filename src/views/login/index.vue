@@ -7,23 +7,30 @@
         </div>
         <el-form label-width="0px"
             :model="loginForm"
+            :rules="loginFormRules"
+            ref="loginFormRef"
             class="login_form">
             <!-- 用户名 -->
-            <el-form-item>
+            <el-form-item prop="user_name">
                 <el-input autoComplete="on"
+                    v-model="loginForm.user_name"
                     placeholder="user"
                 ></el-input>
             </el-form-item>
             <!-- 密码 -->
-            <el-form-item>
+            <el-form-item prop="password">
                 <el-input
                     placeholder="password" 
+                    v-model="loginForm.password"
                     show-password
                 ></el-input>
             </el-form-item>
             <!-- 按钮 -->
             <el-form-item >
-                <el-button type="primary" class="btns">登录</el-button>
+                <el-button 
+                    type="primary"
+                    @click="login"
+                    class="btns">登录</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -41,7 +48,18 @@ data() {
 //这里存放数据
 return {
     loginForm:{
-        
+        user_name:'admin',
+        password:''
+    },
+    loginFormRules:{
+        user_name:[
+            { required: true, message: '请输入用户名', trigger: 'blur' },
+            { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+            ],
+        password:[
+            { required: true, message: '请输入登录密码', trigger: 'blur' },
+            { min: 4, max: 10, message: '长度在 4 到 10 个字符', trigger: 'blur' }
+        ]
     }
 };
 },
@@ -51,7 +69,25 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-
+    login(){
+        this.$nextTick(function(){
+            this.$refs.loginFormRef.validate(valid=>{
+                if(!valid) return;
+                this.$http.post('/login/dologin',this.loginForm)
+                .then((res)=>{
+                    console.log(res)
+                    if(res.status!==1){
+                        this.$message.error("登录失败");
+                    } else{
+                        // this.$message.success('登录成功')
+                        // console.log(res.data.token)
+                        window.sessionStorage.setItem("token",true);
+                        this.$router.push("./home")
+                    } 
+                })
+            })
+        })
+    }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -117,6 +153,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
         background: transparent;
         outline: none;
         padding-left: 30px;
+        color: #fff;
     }
 }
 

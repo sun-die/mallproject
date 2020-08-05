@@ -28,7 +28,7 @@
         <!-- 添加搜索功能结束 -->
 
         <!-- 显示管理员表格 usertable -->
-        <el-col :span="20">
+        <el-col >
             <div class="grid-content bg-purple-dark usertable">
                 <el-table
                     :data="tableData"
@@ -90,13 +90,14 @@
         <!-- 显示管理员表格结束 -->
 
         <!-- 底部 分页栏开始 -->
+        <!-- :current-page="currentPage4" -->
         <el-col :span="20">
             <div class="grid-content bg-purple-dark">
                 <div class="block float_right">
                     <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page="currentPage4"
+                    
                     :page-sizes="[10, 25, 50, 100]"
                     :page-size="10"
                     layout="total, sizes, prev, pager, next, jumper"
@@ -114,11 +115,9 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import Public from "../public"
 export default {
 //import引入的组件需要注入到对象中才能使用
 components: {
-    Public,
 },
 data() {
 //这里存放数据

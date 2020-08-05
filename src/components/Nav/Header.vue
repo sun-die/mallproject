@@ -1,13 +1,21 @@
 <!--  -->
 <template>
   <div class="home-header">
+     <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+  <el-radio-button :label="false">展开</el-radio-button>
+  <el-radio-button :label="true">收起</el-radio-button>
+</el-radio-group> -->
+
+
+
+
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>
+      <!-- <el-breadcrumb-item>
         <a href="/">活动管理</a>
       </el-breadcrumb-item>
       <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+      <el-breadcrumb-item>活动详情</el-breadcrumb-item> -->
     </el-breadcrumb>
 
     <!-- 弹出框 -->
@@ -29,7 +37,7 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import avatar from "@/assets/avatar.gif";
+import avatar from "@/assets/img/avatar.gif";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},

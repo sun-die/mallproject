@@ -1,12 +1,20 @@
 <!--  -->
 <template>
-<div> 
- <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-  <el-radio-button :label="false">展开</el-radio-button>
-  <el-radio-button :label="true">收起</el-radio-button>
-</el-radio-group> -->
-<el-menu default-active="1-4-1" class="el-menu-vertical-demo" background-color="#263445" text-color="#fff"   @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-<el-menu-item index="2">
+<div>
+<el-aside :width="isCollapse?'66px':'200px'">
+  <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+      <el-radio-button :label="false">展开</el-radio-button>
+      <el-radio-button :label="true">收起</el-radio-button>
+  </el-radio-group> -->
+  <div class="toggle-button" @click="toggleCollapse">|||</div>
+<el-menu default-active="1-4-1" 
+  class="el-menu-vertical-demo" 
+  background-color="#263445" 
+  text-color="#fff"  
+  router
+  :collapse='isCollapse'
+  :collapse-transition="false">
+  <el-menu-item index="/pagetop">
     <i class="el-icon-menu"></i>
     <span slot="title">首页</span>
   </el-menu-item>
@@ -15,8 +23,8 @@
       <i class="el-icon-suitcase"></i>
       <span slot="title">后台管理</span>
     </template>
-    <el-menu-item index="1-1">后台管理列表</el-menu-item>
-    <el-menu-item index="1-2">用户角色管理</el-menu-item>
+    <el-menu-item index="/admin/user">后台管理列表</el-menu-item>
+    <el-menu-item index="/admin/role">用户角色管理</el-menu-item>
     
   </el-submenu> 
  <el-submenu index="2">
@@ -25,7 +33,7 @@
       <span slot="title">会员管理</span>
     </template>
      
-    <el-menu-item index="2-1">会员列表</el-menu-item>
+    <el-menu-item index="/member/list">会员列表</el-menu-item>
      
   </el-submenu> 
 
@@ -34,8 +42,8 @@
       <i class="el-icon-goods"></i>
       <span slot="title">商品管理</span>
     </template>
-     <el-menu-item index="3-1"> 商品分类 </el-menu-item>
-     <el-menu-item index="3-2">商品管理</el-menu-item>
+     <el-menu-item index="/product/cate"> 商品分类 </el-menu-item>
+     <el-menu-item index="/product/goods">商品管理</el-menu-item>
   </el-submenu> 
 
 
@@ -44,8 +52,8 @@
       <i class="el-icon-s-order"></i>
       <span slot="title">订单管理</span>
     </template>
-    <el-menu-item index="4-1" @click="dindanClick">订单列表</el-menu-item>
-     <el-menu-item index="4-2" @click="courierClick">快递公司</el-menu-item>
+    <el-menu-item index="/order/order">订单列表</el-menu-item>
+     <el-menu-item index="/order/express">快递公司</el-menu-item>
   </el-submenu> 
 
 
@@ -54,10 +62,11 @@
       <i class="el-icon-thumb"></i>
       <span slot="title">推荐管理</span>
     </template>
-    <el-menu-item index="5-1">推荐位置管理</el-menu-item>
-     <el-menu-item index="5-2">推荐内容管理</el-menu-item>
+    <el-menu-item index="/recommend/position">推荐位置管理</el-menu-item>
+     <el-menu-item index="/recommend/content">推荐内容管理</el-menu-item>
   </el-submenu> 
 </el-menu>
+</el-aside>
 </div>
 </template>
 
@@ -70,9 +79,9 @@ export default {
 components: {},
 data() {
 //这里存放数据
-return {
-      isCollapse: false
-};
+  return {
+    isCollapse: false
+  };
 },
 //监听属性 类似于data概念
 computed: {},
@@ -80,18 +89,9 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-     handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      dindanClick(){
-        this.$router.push('/orderList')
-      },
-      courierClick(){
-         this.$router.push('/couriers')
-      }
+  toggleCollapse(){
+    this.isCollapse=!this.isCollapse;
+  }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -111,5 +111,23 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
 <style lang='less' scoped>
- 
+  html,body{
+    height: 100vh;
+  }
+  .el-aside{
+    height: 100vh;
+    background: #263445;
+  }
+  .el-menu{
+    border-right: 1px solid #263445;
+  }
+  .toggle-button{
+    background: #263445;
+    font-size: 10px;
+    line-height: 24px;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+  }
 </style>

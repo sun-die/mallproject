@@ -1,22 +1,24 @@
 import Vue from 'vue'
+
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/zh-CN'
+
 import App from './App.vue'
 import router from './router'
 import store from './store'
-//完整引入element-ui
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-//引入axios
-import axios from 'axios'
-Vue.prototype.$axios = axios;
-Vue.use(ElementUI);
-// 全局配置element-ui
-// Vue.use(ElementUI, { size: 'small', zIndex: 3000 });
+
+import './assets/css/global.css'
+
+import axios from './utils/myaxios'
+Vue.prototype.$http=axios
+
+Vue.use(ElementUI, { locale })
+
 Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
-  axios,
   render: h => h(App)
-}).$mount('#app');
-
+}).$mount('#app')
