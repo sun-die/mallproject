@@ -11,12 +11,14 @@
     <el-row>
       <el-col :span="24">
         <div class="add-buttom">
-          <el-button type="primary" plain>添加推荐内容</el-button>
+          <el-button type="primary" plain @click="handleAdd()">添加推荐内容</el-button>
         </div>
       </el-col>
     </el-row>
     <!-- 表格 -->
     <el-table
+      v-loading="table_loading"
+      element-loading-text="加载中..."
       :data="tableData"
       border
       :cell-style="rowClass"
@@ -25,11 +27,11 @@
     >
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
       <el-table-column prop="name" label="所属分类" width="200"></el-table-column>
-      <el-table-column prop="msg" label="推荐信息"></el-table-column>
+      <el-table-column prop="memo" label="推荐信息"></el-table-column>
       <el-table-column prop="msg" label="推荐摘要"></el-table-column>
-      <el-table-column prop="picture" label="图片"></el-table-column>
-      <el-table-column prop="www" label="链接"></el-table-column>
-      <el-table-column prop="num" label="排序" width="60"></el-table-column>
+      <el-table-column prop="img" label="图片"></el-table-column>
+      <el-table-column prop="link" label="链接"></el-table-column>
+      <el-table-column prop="sort" label="排序" width="60"></el-table-column>
 
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
@@ -39,14 +41,59 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-        <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page.sync="currentPage1"
-      :page-size="20"
-      layout="total, prev, pager, next"
-      :total="40">
-    </el-pagination>
+    <el-pagination :page-size="20" layout="total, prev, pager, next" :total="total"></el-pagination>
+
+    <!-- 添加推荐位内容 -->
+
+    <el-dialog
+      title="添加推荐为内容"
+      :visible.sync="dialogFormVisible"
+      width="30%"
+      text-align="left"
+      @submit.native.prevent
+    >
+      <el-form :model="form" ref="ruleForm" :rules="rules">
+        <!-- 选择所属推荐位 -->
+        <el-form-item label="选择所属推荐位" prop="name">
+          <el-select v-model="form.name" placeholder="请选择" :label-width="formLabelWidth">
+            <el-option label="首页Banner" value="shanghai"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- 推荐信息 -->
+        <el-form-item label="推荐信息" :label-width="formLabelWidth" prop="msg">
+          <el-input v-model="form.msg" autocomplete="off"></el-input>
+        </el-form-item>
+        <!-- 推荐摘要 -->
+        <el-form-item label="推荐摘要" :label-width="formLabelWidth" prop="memo">
+          <el-input v-model="form.memo" autocomplete="off"></el-input>
+        </el-form-item>
+        <!-- 推荐链接 -->
+        <el-form-item label="推荐链接" :label-width="formLabelWidth" prop="link">
+          <el-input v-model="form.link" autocomplete="off"></el-input>
+        </el-form-item>
+        <!-- 推荐图片 -->
+        <el-form-item label="推荐图片" :label-width="formLabelWidth" prop="img">
+          <el-upload
+            :on-success="skuImgUploadSuccess"
+            :show-file-list="false"
+            :action="imgPostUrl"
+            list-type="pictrue"
+            limit="1"
+          >
+            <el-button slot="trigger" size="small" v-if="!form.img" type="primary">选取文件</el-button>
+            <img :src="cdn+form.img" class="upload-img" v-else slot="trigger" alt />
+          </el-upload>
+        </el-form-item>
+        <!-- 排序 -->
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
+          <el-input v-model="form.sort" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <!-- <el-button @click="dialogFormVisible = false">取 消</el-button> -->
+        <el-button type="primary" @click="dialogFormVisible = false">提 交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -59,7 +106,30 @@ export default {
   components: {},
   data() {
     //这里存放数据
-    return {};
+    return {
+      table_loading: false,
+      tableData: [],
+      dialogFormVisible: false,
+      form: {
+        id: "",
+        pid: "",
+        name: "",
+        msg: "",
+        memo: "",
+        link: "",
+        img: "",
+        sort: 0,
+      },
+      total: 0,
+      page: 1,
+      isAdd: true,
+      rules: {
+        name: [{ required: true, message: "请选择所属分类" }],
+      },
+      inputValue: "",
+      imgPostUrl: "",
+      formLabelWidth: "120px",
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -67,17 +137,54 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    // element表格居中
     headClass() {
       return "text-align:center;";
     },
     rowClass() {
       return "text-align:center;";
     },
+    handleAdd() {
+      this.form = ["", "", "", "", "", "", "", 0];
+      this.isAdd = true;
+      this.dialogFormVisible = true;
+    },
+
+    skuImgUploadSuccess() {},
+
+
+    // 获取数据
+    _getDAta() {
+      this.$http
+        .get("/Recommend/content", {
+          page: this.page,
+          pageSize: 20,
+        })
+        .then((res) => {
+          (this.tableData = res.data.data),
+            (this.total = res.data.total),
+            (this.page = res.current_page),
+            (this.table_loading = false);
+        })
+        .catch((res) => {
+          this.table_loading = true;
+        });
+    },
+
+    // 图片上传
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+     this._getDAta();
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前

@@ -17,6 +17,7 @@
       </el-col>
     </el-row>
     <!-- 表格 -->
+
     <el-table
       :data="tableData"
       border
@@ -25,15 +26,42 @@
       style="width: 100%"
     >
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
+<<<<<<< HEAD
       <el-table-column prop="name" label="分类名"></el-table-column>
       <el-table-column label="操作" width="400">
+=======
+      <el-table-column prop="name" label="分类名">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-input v-if="scope.row.edit" class="edit-input" size="small" v-model="scope.row.name"></el-input>
+          <span v-else>{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="400">
+
+>>>>>>> 4d195b868b2c372706757deda8ff53d1e6e10227
+        <template slot-scope="scope">
+          <el-button
+            v-if="scope.row.edit"
+            icon="el-icon-refresh"
+            size="mini"
+            type="warning"
+            @click="handleCancel(scope.row)"
+          >取消</el-button>
+          <el-button
+            v-if="scope.row.edit"
+            icon="el-icon-circle-check-outline"
+            size="mini"
+            type="success"
+            @click="handleEdit(scope.$index, scope.row)"
+          >保存</el-button>
+
+          <el-button size="mini" type="primary" @click="scope.row.edit=!scope.row.edit">编辑</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页 -->
+<<<<<<< HEAD
     <el-pagination :page-size="5" layout="total, prev, pager, next" :total="pages"></el-pagination>
 
     <!-- 添加推荐位 -->
@@ -49,6 +77,19 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
+=======
+    <el-pagination :page-size="20" layout="total, prev, pager, next" :total="40"></el-pagination>
+
+    <!-- 添加推荐位 -->
+    <el-dialog title="添加推荐位" :visible.sync="dialogFormVisible" width="30%" text-align="left">
+      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm">
+        <el-form-item label="添加推荐名" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="onSubmit('formRule')">确 定</el-button>
+>>>>>>> 4d195b868b2c372706757deda8ff53d1e6e10227
       </span>
     </el-dialog>
   </div>

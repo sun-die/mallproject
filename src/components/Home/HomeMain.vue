@@ -5,52 +5,52 @@
     <el-row class="header-container">
       <el-col :span="12" style="height:300px" id="number"></el-col>
       <el-col :span="12" style="height:300px" id="sales">
-        <!-- <div class="grid-content bg-purple-light"></div> -->
+        <!-- <div class="enter-light"></div> -->
       </el-col>
     </el-row>
 
     <!-- 中间四个小方块 -->
-    <el-row :gutter="20"  >
+    <el-row :gutter="20">
       <el-col :span="6">
-        <div class="grid-content bg-purple">
-          <div  class="img">
+        <div class="enter" @click="gotoUrl('/member/list')">
+          <div class="img">
             <i class="el-icon-user"></i>
           </div>
           <div class="text">
-            <div class="number">12</div>
+            <div class="number">{{enter.user}}</div>
             <div class="title">会员数目</div>
           </div>
         </div>
       </el-col>
       <el-col :span="6">
-        <div class="grid-content bg-purple">
-          <div class="img" >
+        <div class="enter" @click="gotoUrl('/product/goods')">
+          <div class="img">
             <i class="el-icon-goods"></i>
           </div>
           <div class="text">
-            <div class="number">16</div>
+            <div class="number">{{enter.product}}</div>
             <div class="title">商品数目</div>
           </div>
         </div>
       </el-col>
       <el-col :span="6">
-        <div class="grid-content bg-purple">
+        <div class="enter" @click="gotoUrl('/order/order')">
           <div class="img">
             <i class="el-icon-s-order"></i>
           </div>
           <div class="text">
-            <div class="number">21</div>
+            <div class="number">{{enter.order}}</div>
             <div class="title">订单数目</div>
           </div>
         </div>
       </el-col>
       <el-col :span="6">
-        <div class="grid-content bg-purple">
+        <div class="enter" @click="gotoUrl('/product/goods')">
           <div class="img">
             <i class="el-icon-goods"></i>
           </div>
           <div class="text">
-            <div class="number">123</div>
+            <div class="number">{{enter.product}}</div>
             <div class="title">商品数目</div>
           </div>
         </div>
@@ -80,9 +80,10 @@ export default {
   data() {
     //这里存放数据
     return {
-      echarts1: "",
-      // echarts2: null,
-      // echarts3: null,
+      echarts1: null,
+      echarts2: null,
+      echarts3: null,
+      enter: [],
     };
   },
   //监听属性 类似于data概念
@@ -91,6 +92,11 @@ export default {
   watch: {},
   //方法集合
   methods: {
+        gotoUrl(url){
+           this.$router.push(url)
+        },     
+   
+
     initChart1() {
       this.echarts1 = echarts.init(document.getElementById("number"));
       this.echarts1.setOption({
@@ -107,7 +113,7 @@ export default {
         },
         xAxis: {
           type: "category",
-          data: ["8.2", "8.3", "8.4", "8.5", "8.6", "8.7", "8.8"],
+          data: [],
           // data: [],
           axisTick: {
             alignWithLabel: true,
@@ -124,7 +130,7 @@ export default {
         },
         series: [
           {
-            data: ["0", "1", "1.2", "1", "0.2", "0.6", "0.5"],
+            data: [],
             // data: [],
             type: "line",
             areaStyle: {},
@@ -160,7 +166,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: ["8.2", "8.3", "8.4", "8.5", "8.6", "8.7", "8.8"],
+            data: [],
             // data: ['12','14','4','12'   data:['8.2','8.3','8.4','8.5','8.6'],,'15'],
             axisTick: {
               alignWithLabel: true,
@@ -174,13 +180,13 @@ export default {
         ],
         series: [
           {
-            data: ["12", "11", "14", "14", "2", "10", "12"],
+            data: [],
             type: "bar",
             name: "注册人数",
             barWidth: "40%",
           },
           {
-            data: ["10", "1", "12", "14", "20", "10", "12"],
+            data: [],
             type: "bar",
             name: "活跃人数",
             barWidth: "40%",
@@ -215,7 +221,7 @@ export default {
         },
         xAxis: {
           type: "category",
-          data: ["8.2", "8.3", "8.4", "8.5", "8.6", "8.7", "8.8"],
+          data: [],
           // data: [],
           axisTick: {
             alignWithLabel: true,
@@ -232,7 +238,7 @@ export default {
         },
         series: [
           {
-            data: ["0", "0", "0", "0", "0", "0", "8"],
+            data: [],
             type: "bar",
             name: "取消订单",
             animationDelay(idx) {
@@ -240,7 +246,7 @@ export default {
             },
           },
           {
-            data: ["0", "0", "0", "0", "0", "0", "4"],
+            data: [],
             type: "bar",
             name: "待支付订单",
             animationDelay(idx) {
@@ -248,7 +254,7 @@ export default {
             },
           },
           {
-            data: ["0", "0", "0", "0", "0", "0", "6"],
+            data: [],
             type: "bar",
             name: "待发货订单",
             animationDelay(idx) {
@@ -256,7 +262,7 @@ export default {
             },
           },
           {
-            data: ["0", "0", "0", "0", "0", "0", "2"],
+            data: [],
             type: "bar",
             name: "待收货订单",
             animationDelay(idx) {
@@ -264,7 +270,7 @@ export default {
             },
           },
           {
-            data: ["0", "0", "0", "0", "0", "0", "4"],
+            data: [],
             type: "bar",
             name: "完成订单",
             animationDelay(idx) {
@@ -279,18 +285,110 @@ export default {
       });
     },
 
-    // _getData1() {
-    //         this.echarts1.showLoading();
-    //         salesCharts().then(res => {
-    //             this.echarts1.setOption({
-    //                 xAxis: { data:res.data.time  },
-    //                 series: [{ data: res.data.data}]
-    //             })
-    //             this.echarts1.hideLoading()
-    //         }).catch(err => {
-    //             console.log(err)
-    //         })
-    //     },
+    _getData1() {
+      this.echarts1.showLoading();
+      this.$http
+        .get("/index/sales")
+        .then((res) => {
+          this.echarts1.setOption({
+            xAxis: { data: res.data.time },
+            series: [{ data: res.data.data }],
+          });
+          this.echarts1.hideLoading();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    _getData2() {
+      this.echarts2.showLoading();
+      this.$http
+        .get("index/member")
+        .then((res) => {
+          this.echarts2.setOption({
+            xAxis: { data: res.data.time },
+            series: [
+              {
+                // data: res.data.data,
+                type: "bar",
+                name: "注册人数",
+                barWidth: "40%",
+              },
+              {
+                data: res.data.active,
+                type: "bar",
+                name: "活跃人数",
+                barWidth: "40%",
+              },
+            ],
+          });
+          this.echarts2.hideLoading();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    _getData3() {
+      this.echarts3.showLoading();
+      this.$http
+        .get("/index/orderInfo")
+        .then((res) => {
+          this.echarts3.setOption({
+            xAxis: { data: res.data.time },
+            series: [
+              {
+                data: res.data.cancel,
+                type: "bar",
+                name: "取消订单",
+                animationDelay(idx) {
+                  return idx * 10;
+                },
+              },
+              {
+                data: res.data.wait,
+                type: "bar",
+                name: "待支付订单",
+                animationDelay(idx) {
+                  return idx * 10 + 100;
+                },
+              },
+              {
+                data: res.data.pay,
+                type: "bar",
+                name: "待发货订单",
+                animationDelay(idx) {
+                  return idx * 10 + 200;
+                },
+              },
+              {
+                data: res.data.wait_get,
+                type: "bar",
+                name: "待收货订单",
+                animationDelay(idx) {
+                  return idx * 10 + 300;
+                },
+              },
+              {
+                data: res.data.get,
+                type: "bar",
+                name: "完成订单",
+                animationDelay(idx) {
+                  return idx * 10 + 400;
+                },
+              },
+            ],
+          });
+          this.echarts3.hideLoading();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    _getData4() {
+      this.$http("/index/systemCount").then(res=>{
+         this.enter=res.data;
+      });
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
@@ -303,7 +401,10 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.$nextTick(() => {
-      //  this._getData1()
+      this._getData1();
+      this._getData2();
+      this._getData3();
+      this._getData4();
     });
   },
   beforeCreate() {}, //生命周期 - 创建之前
@@ -320,16 +421,14 @@ export default {
   width: 100%;
   padding: 10px;
   .header-container {
-    width: 100%; 
+    width: 100%;
   }
-     
-  .el-row{
-    margin:20px  0;
+
+  .el-row {
+    margin: 20px 0;
   }
- 
-  
 }
-.grid-content {
+.enter {
   height: 90px;
   border: 1px solid #dddddd;
   display: flex;
@@ -338,32 +437,41 @@ export default {
   background-color: #fff;
   margin: 10px 30px;
   box-shadow: 0 0 3px #000;
-   
-   .img{
-      height: 91px;
-      width:  91px;
-      background: #2ec7c9;
-      border-right:1px solid #fff;
-      i{
-        width: 30px;
-        height: 30px;
-        margin: 30px;
-        fill: #fff;
-      }
-   }
-   .text{
-     flex: 1;
-     text-align: center;
-     .number{
-       font-size:30px
-     }
-     .time{
-       font-size: 15px;
-     }
-     .title{
-       color: #ccc;
-     }
-   }
-}
 
+  .img {
+    height: 91px;
+    width: 91px;
+    background: #2ec7c9;
+    border-right: 1px solid #fff;
+    i {
+      width: 30px;
+      height: 30px;
+      margin: 30px;
+      fill: #fff;
+    }
+  }
+  .text {
+    flex: 1;
+    text-align: center;
+    .number {
+      font-size: 30px;
+    }
+    .time {
+      font-size: 15px;
+    }
+    .title {
+      color: #ccc;
+    }
+  }
+}
+.enter:hover {
+  background-color: #7cbdbc;
+  color: #fff;
+  .img {
+    background-color: #7cbdbc;
+  }
+  .title {
+    color: #fff;
+  }
+}
 </style>

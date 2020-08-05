@@ -1,8 +1,33 @@
 <!--  -->
 <template>
   <div class="app-container" id="product-index">
-    <p class="page-title">商品列表</p>
-    <div class="filter-container">
+    <el-row>
+      <el-col :span="24">
+        <div class="title">商品列表</div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
+        <div class="addgoods">
+          <el-button type="primary" plain @click="addgoods">添加商品</el-button>
+        </div>
+      </el-col>
+      <el-col :span="12">
+        <div class="member-search">
+          <el-select v-model="params.cate_id" placeholder="分类">
+            <el-option v-for="(item, index) in cate" :label="item" :value="index" :key="index"></el-option>
+          </el-select>
+          <el-input
+            placeholder="商品名"
+            style="width: 200px; margin: 0 3px"
+            class="filter-item"
+            v-model="params.title"
+          ></el-input>
+          <el-button type="primary" class="filter-item">搜索</el-button>
+        </div>
+      </el-col>
+    </el-row>
+    <!-- <div class="filter-container">
       <el-button type="primary" plain class="filter-item">添加商品</el-button>
       <div style="float: right; display: flex">
         <el-select v-model="params.cate_id" placeholder="分类">
@@ -16,36 +41,36 @@
         ></el-input>
         <el-button type="primary" class="filter-item">搜索</el-button>
       </div>
-    </div>
+    </div>-->
     <el-table :data="tableData" style="width: 100%" border highlight-current-row>
-      <el-table-column align="center" width = "48px"></el-table-column>
-      <el-table-column align="center" prop="id" label="ID" width= "60px"></el-table-column>
-      <el-table-column align="center" prop="name" label="商品名" width = "140px"></el-table-column>
-      <el-table-column align="center" prop="img" label="商品图片" width = "136px">
-          <img src="" alt="">
+      <el-table-column align="center" width="48px"></el-table-column>
+      <el-table-column align="center" prop="id" label="ID" width="60px"></el-table-column>
+      <el-table-column align="center" prop="name" label="商品名" width="140px"></el-table-column>
+      <el-table-column align="center" prop="img" label="商品图片" width="136px">
+        <img src alt />
       </el-table-column>
-      <el-table-column align="center" prop="sku" label="所属分类" width = "136px"></el-table-column>
-      <el-table-column align="center" prop="market" label="市场价" width = "136px"></el-table-column>
-      <el-table-column align="center" prop="sell" label="售价" width = "136px"></el-table-column>
-      <el-table-column align="center" prop="inventory" label="库存" width = "80px"></el-table-column>
-      <el-table-column align="center" prop="sales" label="销量" width = "80px"></el-table-column>
-      <el-table-column align="center"  prop="status" label="状态" width = "80px">
-          <el-tag type="success">
-              <span>上架</span>
-          </el-tag>
+      <el-table-column align="center" prop="sku" label="所属分类" width="136px"></el-table-column>
+      <el-table-column align="center" prop="market" label="市场价" width="136px"></el-table-column>
+      <el-table-column align="center" prop="sell" label="售价" width="136px"></el-table-column>
+      <el-table-column align="center" prop="inventory" label="库存" width="80px"></el-table-column>
+      <el-table-column align="center" prop="sales" label="销量" width="80px"></el-table-column>
+      <el-table-column align="center" prop="status" label="状态" width="80px">
+        <el-tag type="success">
+          <span>上架</span>
+        </el-tag>
       </el-table-column>
-      <el-table-column align="center" prop="" label="操作" >
-          <el-button type="primary" size="mini">编辑</el-button>
-           <el-button type="danger" size="mini">删除</el-button>
+      <el-table-column align="center" prop label="操作">
+        <el-button type="primary" size="mini"@click="editgoods">编辑</el-button>
+        <el-button type="danger" size="mini">删除</el-button>
       </el-table-column>
     </el-table>
-     <div class="block">
+    <div class="block">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[10, 25, 50, 100]"
-        :page-size="100"
+        :page-size="10"
         layout="total, sizes, prev, pager, next, jumper"
         :total="6"
       ></el-pagination>
@@ -70,73 +95,72 @@ export default {
       },
       currentPage: 1,
       tableData: [
-           {
-            id: 6,
+        {
+          id: 6,
           name: "蒸熊掌",
-            img:"",
+          img: "",
           sku: "吃",
           market: 666,
-          sell:999,
-             inventory:111,
-             sales:777,
-             status:"上架"
+          sell: 999,
+          inventory: 111,
+          sales: 777,
+          status: "上架",
         },
         {
-            id: 5,
+          id: 5,
           name: "蒸鹿尾",
-            img:"",
+          img: "",
           sku: "吃",
           market: 250,
-          sell:100,
-             inventory:66,
-             sales:666,
-             status:"上架"
+          sell: 100,
+          inventory: 66,
+          sales: 666,
+          status: "上架",
         },
         {
-            id: 4,
+          id: 4,
           name: "蒸熊掌",
-            img:"",
+          img: "",
           sku: "吃",
           market: 666,
-          sell:999,
-             inventory:111,
-             sales:777,
-             status:"上架"
+          sell: 999,
+          inventory: 111,
+          sales: 777,
+          status: "上架",
         },
         {
-            id: 3,
+          id: 3,
           name: "蒸鹿尾",
-            img:"",
+          img: "",
           sku: "吃",
           market: 250,
-          sell:100,
-             inventory:66,
-             sales:666,
-             status:"上架"
+          sell: 100,
+          inventory: 66,
+          sales: 666,
+          status: "上架",
         },
         {
-            id: 2,
+          id: 2,
           name: "蒸鹿尾",
-            img:"",
+          img: "",
           sku: "吃",
           market: 250,
-          sell:100,
-             inventory:66,
-             sales:666,
-             status:"上架"
+          sell: 100,
+          inventory: 66,
+          sales: 666,
+          status: "上架",
         },
         {
-            id: 1,
+          id: 1,
           name: "蒸鹿尾",
-            img:"",
+          img: "",
           sku: "吃",
           market: 250,
-          sell:100,
-             inventory:66,
-             sales:666,
-             status:"上架"
+          sell: 100,
+          inventory: 66,
+          sales: 666,
+          status: "上架",
         },
-       
       ],
     };
   },
@@ -146,12 +170,18 @@ export default {
   watch: {},
   //方法集合
   methods: {
-      handleSizeChange(val) {
+    handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
+    addgoods(){
+      return this.$router.push("/product/addgoods")
+    },
+    editgoods(){
+      return this.$router.push("/product/editgoods")
+    }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
@@ -167,13 +197,29 @@ export default {
 };
 </script>
 <style lang = 'less' scoped>
+.title {
+  color: #cccccc;
+  border-bottom: 1px dashed #ccc;
+  text-align: left;
+  padding: 10px;
+}
+.addgoods {
+  text-align: left;
+  padding: 15px;
+  height: 50px;
+}
+.member-search{
+  text-align: right;
+  padding: 15px;
+  height: 50px;
+}
 .block {
-    float: right;
-    margin: 20px;
-    button {
-      :disabled {
-        background-color: red;
-      }
+  float: right;
+  margin: 20px;
+  button {
+    :disabled {
+      background-color: red;
     }
   }
+}
 </style>

@@ -1,25 +1,28 @@
 <!--  -->
 <template>
   <div class="app-container">
-    <div class="page-title">商品分类列表</div>
-    <div class="filter-container">
-      <button
-        type="button"
-        class="el-button filter-item el-button--primary is-plain"
-        @click="addCate"
-      >
-        <span>添加分类</span>
-      </button>
-      <div style="float:right">
-        <div class="filter-item el-input" style="width:200px">
-          <input type="text" placeholder="分类名" class="el-input__inner" autocomplete="off" />
+    <el-row>
+      <el-col :span="24">
+        <div class="title" >商品分类列表</div>
+      </el-col>
+    </el-row>
+<!-- 顶部功能栏 -->
+    <el-row>
+      <el-col :span="12">
+        <div class="addcate">
+          <el-button type="primary" plain @click="addCate">添加分类</el-button>
         </div>
-        <button type="button" class="el-button filter-item el-button--primary">
-          <span>搜索</span>
-        </button>
-      </div>
-    </div>
+      </el-col>
+      <el-col :span="12">
+        <div class="member-search">
+          <el-input v-model="cateName" placeholder="请输入分类名"></el-input>
+          <el-button type="primary">搜索</el-button>
+        </div>
+      </el-col>
+    </el-row>
+ <!-- 表格主体开始 -->
     <el-table :data="tableData" style="width: 100%" border highlight-current-row>
+        <!-- 隐藏的分类属性开始 -->
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-tag type="success">商品属性1:</el-tag>
@@ -41,6 +44,8 @@
           ></el-input>
           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增属性</el-button>
         </template>
+        <!-- 隐藏的分类属性结束 -->
+       
       </el-table-column>
       <el-table-column align="center" label="ID" prop="id" width="60px"></el-table-column>
       <el-table-column align="center" label="分类名" prop="name"></el-table-column>
@@ -51,17 +56,23 @@
         <el-button type="danger" icon="el-icon-close" size="mini">删除</el-button>
       </el-table-column>
     </el-table>
+    <!--表格主体结束  -->
+
+    <!-- 分页器开始 -->
     <div class="block">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[10, 25, 50, 100]"
-        :page-size="100"
+        :page-size="10"
         layout="total, sizes, prev, pager, next, jumper"
         :total="8"
       ></el-pagination>
     </div>
+    <!-- 分页器结束 -->
+
+    <!-- 添加分类开始 -->
     <el-dialog :visible.sync="showDialog" title="添加分类" width="30%">
       <el-form
         :model="form"
@@ -84,12 +95,15 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <!-- 添加分类结束 -->
   </div>
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
+
 
 export default {
   //import引入的组件需要注入到对象中才能使用
@@ -99,60 +113,14 @@ export default {
     //这里存放数据
     return {
       tableData: [
-        {
-          id: "10",
-          name: "行",
-          desc: "50",
-          time: "2018-04-17 19:49:39",
-        },
-        {
-          id: "8",
-          name: "住",
-          desc: "1",
-          time: "2018-04-17 19:49:39",
-        },
-        {
-          id: "7",
-          name: "食",
-          desc: "1",
-          time: "2018-04-17 19:49:39",
-        },
-        {
-          id: "6",
-          name: "衣",
-          desc: "1",
-          time: "2018-04-17 19:49:39",
-        },
-        {
-          id: "5",
-          name: "乐",
-          desc: "1",
-          time: "2018-04-17 19:49:39",
-        },
-        {
-          id: "3",
-          name: "玩",
-          desc: "1",
-          time: "2018-04-17 19:49:39",
-        },
-        {
-          id: "2",
-          name: "喝",
-          desc: "1",
-          time: "2018-04-17 19:49:39",
-        },
-        {
-          id: "1",
-          name: "吃",
-          desc: "1",
-          time: "2018-04-17 19:49:39",
-        },
+        
       ],
       dynamicTags: [],
       inputVisible: false,
       inputValue: "",
       currentPage: 1,
       showDialog: false,
+      cateName:"",
       params: {
         name: "",
       },
@@ -208,7 +176,28 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+      let _this = this;
+      let arr = []
+      this.$http.get("cate/index",{
+      }).then((res)=>{
+        console.log(res)
+        res.data.data.forEach((item)=>{
+          _this.tableData.unshift({
+            id:item.id,
+            name:item.name,
+            desc:item.sort,
+            time:item.add_time
+          });
+          item.sku.forEach((items)=>{
+            arr.push(
+              items.name
+            )
+          })
+          _this.dynamicTags = arr
+        })
+      })
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
@@ -220,6 +209,26 @@ export default {
 </script>
 <style lang = 'less' scoped>
 .app-container {
+  .title {
+    color: #cccccc;
+    border-bottom: 1px dashed #ccc;
+    text-align: left;
+    padding: 10px;
+  }
+  .addcate {
+    text-align: left;
+    padding: 15px;
+    height: 50px;
+  }
+  .member-search {
+    text-align: right;
+    padding: 15px;
+    height: 50px;
+    .el-input {
+      margin-right: 5px;
+      width: 200px;
+    }
+  }
   .demo-table-expand {
     font-size: 0;
   }
