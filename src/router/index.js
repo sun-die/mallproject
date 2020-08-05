@@ -14,7 +14,8 @@ import Position from '../views/recommend/position/index'
 import Order from '../views/order/order'
 import OrderDetail  from '../views/order/order/detail'
 import  Express from '../views/order/express'
-
+import AddGoods from '../views/goods/pro/addgoods'
+import EditGoods from '../views/goods/pro/editgoods'
 Vue.use(VueRouter)
 
   const routes = [
@@ -41,6 +42,8 @@ Vue.use(VueRouter)
         {path:'/admin/adduser',component:addUser},
         {path:'/product/cate',component:Cate},
         {path:'/product/goods',component:Pro},
+        {path:'/product/addgoods',component:AddGoods},
+        {path:'/product/editgoods',component:EditGoods},
         {path:'/member/list',component:Member},
         {path:'/recommend/content',component:Content},
         {path:'/recommend/position',component:Position},
