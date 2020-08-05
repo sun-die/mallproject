@@ -3,7 +3,7 @@
     <div>
         <div class='orderDeails'>
             <div class="orderDeailsLeft">
-                <el-steps :active="2" align-center width='300px'>
+                <el-steps :active="userList.uid" align-center width='300px'>
                     <el-step title="添加商品"></el-step>
                     <el-step title="等待支付" ></el-step>
                     <el-step title="等待发货"></el-step>
@@ -14,7 +14,7 @@
                 <div class="productList">
                     <div class="listLeft">
                         <div class="listLeft1">
-                            头像
+                            图片
                         </div>
                         <div class="listLeft2">
                             <p>这是测试测试测试</p>
@@ -31,38 +31,38 @@
                 <div class="price">
                     <div>
                         <div>商品总价</div>
-                        <div>￥99.00</div>
+                        <div>￥{{userList.amount}}</div>
                     </div>
                     <div>
                         <div>邮费</div>
-                        <div>￥0.00</div>
+                        <div>￥{{userList.payment}}</div>
                     </div>
                     <div>
                         <div>优惠</div>
-                        <div>￥0.00</div>
+                        <div>￥{{userList.postage}}</div>
                     </div>
                     <div>
                         <div>订单总价</div>
-                        <div>￥99.00</div>
+                        <div>￥{{userList.money}}</div>
                     </div>
                     <div class="have">
                         <div>已支付</div>
-                        <div>￥0.00</div>
+                        <div>￥{{userList.reduce}}</div>
                     </div>
                 </div>
                 <div class="message">
                     <div class="take">收货信息</div>
                     <div>
                         <div>收货人</div>
-                        <div>刘指乾小组</div>
+                        <div>{{userList.post_name}}</div>
                     </div>
                     <div>
                         <div>收货电话</div>
-                        <div>18888888888</div>
+                        <div>{{userList.post_tel}}</div>
                     </div>
                     <div>
                         <div>收货地址</div>
-                        <div>深圳千峰</div>
+                        <div>{{userList.post_address}}</div>
                     </div>
                 <p class="express">快递信息</p>
                 </div>
@@ -81,6 +81,7 @@ components: {},
 data() {
 //这里存放数据
 return {
+  userList:[]
 
 };
 },
@@ -90,7 +91,25 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-
+ //获取数据
+    handelUserList(){
+        this.$http.get("/order/index",{}
+        ).then(res=>{
+        console.log(res)
+        //  this.userList = res.data.data
+        //console.log(this.$route.query.id)
+         for(var item of res.data.data){
+             if(item.id == this.$route.query.id){
+                  this.userList = item
+                  console.log(this.userList)//获取到对应的数据
+                  return
+             }
+         }
+        }).catch(err=>{
+          console.log(err)
+        })
+        
+      }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -98,7 +117,7 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-
+   this. handelUserList()
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
