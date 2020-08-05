@@ -5,20 +5,18 @@
     <div class="adminUsermain">
         <el-row>
         <!-- usertitle -->
-        <el-col :span="20"><div class="grid-content bg-purple-dark usertitle">管理员列表</div></el-col>
+        <el-col><div class="grid-content bg-purple-dark usertitle">管理员列表</div></el-col>
 
         <!-- 中间位置 实现添加搜索管理员功能 usermiddle -->
-        <el-col :span="20">
+        <el-col>
             <div class="grid-content bg-purple-dark usermiddle">
                 <!-- 添加管理员按钮 -->
-                <el-button type="primary" plain>添加管理员</el-button>
+                <el-button type="primary" plain @click="adduser">添加管理员</el-button>
                 <!-- 搜索管理员功能 -->
-                <div class="add-right float_right">
+                <div class="add-right">
                     <!-- 输入管理员名字搜索 含v-model -->
-                    <el-input class="middleinput"
-                        placeholder="管理员用户名"
-                        v-model="input"
-                        clearable>
+                    <el-input class="middleinput" placeholder="管理员用户名" clearable 
+                    v-model="input">
                     </el-input>
                     <!-- 搜索按钮 需添加功能 -->
                     <el-button type="primary" class="middlebutton">搜索</el-button>
@@ -30,57 +28,32 @@
         <!-- 显示管理员表格 usertable -->
         <el-col >
             <div class="grid-content bg-purple-dark usertable">
-                <el-table
-                    :data="tableData"
-                    border
-                    style="width: 100%">
-                    <el-table-column
-                        prop="date"
-                        label="ID"
-                        width="60"
-                        align="center">
+                <el-table border style="width: 100%"
+                    :data="tableData">
+                    <el-table-column label="ID" align="center" width="60px"
+                        prop="date">
                     </el-table-column>
-                    <el-table-column
-                        prop="name"
-                        label="管理员名称"
-                        width="160"
-                        align="center">
+                    <el-table-column label="管理员名称" align="center"
+                        prop="name">
                     </el-table-column>
-                    <el-table-column 
-                        prop="address"
-                        label="管理员真实姓名"
-                        width="160"
-                        align="center">
+                    <el-table-column label="管理员真实姓名" align="center"
+                        prop="address">
                     </el-table-column>
-                    <el-table-column 
-                        prop="address"
-                        label="管理员角色"
-                        width="161"
-                        align="center">
+                    <el-table-column label="管理员角色" align="center"
+                        prop="address">
                     </el-table-column>
-                    <el-table-column 
-                        prop="address"
-                        label="最后登录IP"
-                        width="161"
-                        align="center">
+                    <el-table-column label="最后登录IP" align="center"
+                        prop="address">
                     </el-table-column>
-                    <el-table-column 
-                        prop="address"
-                        label="最后登录时间"
-                        width="161"
-                        align="center">
+                    <el-table-column label="最后登录时间" align="center"
+                        prop="address">
                     </el-table-column>
-                    <el-table-column 
-                        label="状态"
-                        width="80"
-                        align="center">
+                    <el-table-column label="状态" align="center"
+                        prop="date">
                         <!-- 按钮 -->
                         <el-button type="success" size="mini">正常</el-button>
                     </el-table-column>
-                    <el-table-column 
-                        label="操作"
-                        width="161"
-                        align="center">
+                    <el-table-column label="操作" align="center">
                         <el-button type="primary" size="mini">编辑</el-button>
                         <el-button type="danger" size="mini">删除</el-button>
                     </el-table-column>
@@ -91,13 +64,12 @@
 
         <!-- 底部 分页栏开始 -->
         <!-- :current-page="currentPage4" -->
-        <el-col :span="20">
+        <el-col>
             <div class="grid-content bg-purple-dark">
-                <div class="block float_right">
+                <div class="block usersearch">
                     <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    
                     :page-sizes="[10, 25, 50, 100]"
                     :page-size="10"
                     layout="total, sizes, prev, pager, next, jumper"
@@ -124,19 +96,19 @@ data() {
 return {
     input: '',
     tableData: [{
-          date: '2016-05-02',
+          date: '1',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
         }, {
-          date: '2016-05-04',
+          date: '2',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄'
         }, {
-          date: '2016-05-01',
+          date: '3',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1519 弄'
         }, {
-          date: '2016-05-03',
+          date: '4',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1516 弄'
         }],
@@ -154,6 +126,10 @@ methods: {
     },
     handleCurrentChange(val) {
     console.log(`当前页: ${val}`);
+    },
+    // 跳转页面
+    adduser:function() {
+        this.$router.push('/admin/addUser/');
     }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
@@ -177,9 +153,8 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 .adminUser {
     height: 100%;
     .adminUsermain {
-        padding: 20px;
         .usertitle {
-            padding: 10px;
+            padding-left: 10px;
             height: 38px;
             margin: 16px 0;
             color: #ccc;
@@ -188,6 +163,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
         .usermiddle {
             padding-bottom: 10px;
             .add-right {
+                float:right;
                 .middleinput {
                     width: 200px;
                     margin-right: 5px;
@@ -196,6 +172,9 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
         }
         .usertable {
             margin-bottom: 20px;
+        }
+        .usersearch {
+            float:right;
         }
     }
 }

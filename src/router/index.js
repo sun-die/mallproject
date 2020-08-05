@@ -4,6 +4,8 @@ import Login from '../views/login/index'
 import Home from '../views/home/index'
 import HomeMain from '../components/Home/HomeMain'
 import User from '../views/admin/user/index'
+import addUser from '../views/admin/user/adduser'
+import Role from '../views/admin/role/index'
 import Cate from '../views/goods/cate/index'
 import Pro from '../views/goods/pro/index'
 import Member from '../views/member/index'
@@ -35,6 +37,8 @@ Vue.use(VueRouter)
       children:[
         {path:'/pagetop',component:HomeMain},
         {path:'/admin/user',component:User},
+        {path:'/admin/role',component:Role},
+        {path:'/admin/adduser',component:addUser},
         {path:'/product/cate',component:Cate},
         {path:'/product/goods',component:Pro},
         {path:'/member/list',component:Member},
