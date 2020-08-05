@@ -14,7 +14,7 @@
       </el-select>
       <el-button type="primary" @click='state'>搜索</el-button>
     </div>
-    <el-table :data=" userList.slice((currentPage-1)*pagesize,currentPage*pagesize)" border>
+    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" border>
       <el-table-column width='50px' align='center' prop="id" label="ID" border></el-table-column>
       <el-table-column width='200px' align='center' prop="no" label="订单编号"></el-table-column>
       <el-table-column align='center' prop="post_name" label="用户"></el-table-column>
@@ -27,11 +27,11 @@
       <el-table-column width='200px' align='center' prop="time" label="支付订单时间"></el-table-column>
       <el-table-column align='center' ref='qqq' prop="state" label="订单状态">
         <template slot-scope="scope">   
-            <el-tag v-if='scope.row.pay_way== -1'>取消</el-tag>  
-            <el-tag v-if='scope.row.pay_way== 0'>待付款</el-tag>  
-            <el-tag v-if='scope.row.pay_way== 1'>待发货</el-tag>  
-            <el-tag v-if='scope.row.pay_way== 2'>待签收</el-tag>  
-            <el-tag v-if='scope.row.pay_way== 3'>已完成</el-tag>  
+            <el-tag v-if='scope.row.pay_way == -1'>取消</el-tag>  
+            <el-tag v-if='scope.row.pay_way == 0'>待付款</el-tag>  
+            <el-tag v-if='scope.row.pay_way == 1'>待发货</el-tag>  
+            <el-tag v-if='scope.row.pay_way == 2'>待签收</el-tag>  
+            <el-tag v-if='scope.row.pay_way == 3'>已完成</el-tag>  
         </template>
       </el-table-column>
       <el-table-column prop="address" label="操作">
@@ -89,11 +89,12 @@ export default {
   methods: {
     //搜索功能
       state:function(){
-          var shis =  this.value     
-          var arr = this.tabelData.filter(function(item){   
-            console.log(item.status)          
-              return item.status == shis
-          })
+          var shis =  this.value 
+          this.tableData = this.userList
+          var arr = this.tableData.filter(function(item){ 
+            console.log(item)                 
+              return item.pay_way == shis
+          })  
           this.tableData = arr
       },
       //每页显示多少条数据
@@ -111,10 +112,10 @@ export default {
         this.$http.get("/order/index",{}
         ).then(res=>{
          this.userList = res.data.data//获取的数据
+        this.tableData = res.data.data
         }).catch(err=>{
           console.log(err)
-        })
-        // this.tableData= this.userList
+        }) 
       },
       //详情页跳转
       detail:function(id){

@@ -131,6 +131,7 @@ export default {
       for(var key in this.form){
         if( this.form[key]==''){
             alert('必须全部填好！！！明白了吗？？')
+            return
         }
       }
       this.dialogFormVisible = false;
