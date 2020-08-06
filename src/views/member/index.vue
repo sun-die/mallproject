@@ -31,17 +31,17 @@
     <el-table-column
       prop="phone"
       label="电话号码"
-      width="180">
+     >
     </el-table-column>
     <el-table-column
       prop="name"
       label="真实姓名"
-      width="180">
+      >
     </el-table-column>
     <el-table-column
       prop="status"
       label="状态"
-      width="180"
+      
        >
          <template slot-scope="scope">
                     <el-tag type="success"
@@ -53,17 +53,17 @@
     <el-table-column
       prop="jifen"
       label="内置积分"
-      width="120">
+      >
     </el-table-column>
      <el-table-column
       prop="date"
       label="注册时间"
-      width="240">
+      w >
     </el-table-column>
     <el-table-column
       prop="time"
       label="最后登录时间"
-      width="240">
+      >
     </el-table-column>
     <el-table-column
       prop="caozuo"
