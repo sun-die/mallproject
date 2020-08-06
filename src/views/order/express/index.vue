@@ -39,7 +39,7 @@
     <!-- 添加快递公司  弹出框    结束-->
     <!-- 快递公司  名片 -->
     <div class="business">
-      <el-row :gutter="20">
+      <el-row :gutter="30">
         <el-col :span="8" v-for="item,index in card">
           <div class="grid-content bg-purple">
             <h2 class="title">
@@ -221,12 +221,14 @@ export default {
 }
 .business {
   margin-top: 20px;
+ 
 }
 .grid-content {
   background: rgb(230, 251, 227);
   border-radius: 10px;
   padding: 15px 0;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+   box-shadow:0 0 20px -6px rgb(187, 187, 187);
   h2.title {
     display: flex;
     height: 50px;
