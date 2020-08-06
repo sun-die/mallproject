@@ -17,7 +17,7 @@
       </el-col>
     </el-row>
      
-     <!-- 会员列表 -->
+     <!-- 会员列表
      <el-table
     :data="tableData"
     border
@@ -58,17 +58,17 @@
      <el-table-column
       prop="date"
       label="注册时间"
-      w >
+      >
     </el-table-column>
     <el-table-column
       prop="time"
-      label="最后登录时间"
-      >
+      label="最后登录时间">
+     
     </el-table-column>
     <el-table-column
       prop="caozuo"
       label="操作"
-      width="100">
+      width="100"> -->
 
     <!-- 会员列表 -->
     <el-table
