@@ -26,10 +26,6 @@
       style="width: 100%"
     >
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
-<<<<<<< HEAD
-      <el-table-column prop="name" label="分类名"></el-table-column>
-      <el-table-column label="操作" width="400">
-=======
       <el-table-column prop="name" label="分类名">
         <template slot-scope="scope">
           <el-input v-if="scope.row.edit" class="edit-input" size="small" v-model="scope.row.name"></el-input>
@@ -38,7 +34,6 @@
       </el-table-column>
       <el-table-column label="操作" width="400">
 
->>>>>>> 4d195b868b2c372706757deda8ff53d1e6e10227
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.edit"
@@ -61,23 +56,6 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-<<<<<<< HEAD
-    <el-pagination :page-size="5" layout="total, prev, pager, next" :total="pages"></el-pagination>
-
-    <!-- 添加推荐位 -->
-    <el-dialog title="添加推荐位" 
-      :visible.sync="dialogFormVisible" 
-      @close="addDialogClose"
-      width="30%" text-align="left">
-      <!-- <span>这是一段信息</span> -->
-      <el-form :model="addForm" status-icon :rules="formRule" ref="formRef">
-        <el-form-item label="添加推荐名" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="addForm.name"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
-=======
     <el-pagination :page-size="20" layout="total, prev, pager, next" :total="40"></el-pagination>
 
     <!-- 添加推荐位 -->
@@ -89,7 +67,6 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit('formRule')">确 定</el-button>
->>>>>>> 4d195b868b2c372706757deda8ff53d1e6e10227
       </span>
     </el-dialog>
   </div>
@@ -106,23 +83,22 @@ export default {
     //这里存放数据
     return {
       tableData: [
-        // {
-        //   id: 12,
-        //   name: "首页Baner",
-        // },
+        {
+          id: 12,
+          name: "首页Baner",
+          edit:false
+        },
       ],
-      pages:0,
       dialogFormVisible: false,
-      // ruleForm: {
-      //   content: "",
-      // },
-      addForm: {
-        name:"",
+
+      ruleForm: {
+        name: "",
       },
-      formRule: {
+
+      rules: {
         name: [
-          { required: true, message: "请输入推荐名", trigger: "blur" },
-          { min: 5, max: 15, message: "长度在 5 到 15 个字符", trigger: "blur" },
+          { required: true, message: "请输入类名", trigger: "blur" },
+          //  { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
       },
       formLabelWidth: "120px",
@@ -144,50 +120,46 @@ export default {
     rowClass() {
       return "text-align: center;";
     },
-    // //  点击添加按钮
-    // addPosition() {
-    //   this.form.name = "";
-    //   this.dialogFormVisible = true;
-    // },
-    // onSubmit() {
-    //   this.$refs[cateForm].validate((valid) => {
-    //     if (valid) {
-    //       alert("submit!");
-    //     } else {
-    //       console.log("error submit!!");
-    //       return false;
-    //     }
-    //   });
-    // },
-    getRecommendList(){
-      this.$http.get('/Recommend/index')
-      .then(res=>{
-        if (res.status!==1) {
-          return this.$message.error('用户列表获取失败！');
+    //  点击添加按钮
+    addPosition() {
+      this.form.name = "";
+      this.dialogFormVisible = true;
+    },
+    onSubmit() {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
         }
-        this.tableData=res.data
-        this.pages=res.data.length
-      })
+      });
     },
-    addDialogClose(){
-      this.$refs.formRef.resetFields()
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     },
-    onSubmit(){
-      this.$refs.formRef.validate(valid=>{
-        if (!valid) return;
-        this.$http.post('/Recommend/addRecommendList',this.addForm)
-        .then(res=>{
-          this.$message=res.mgs
-        })
         
-      })
-    }
+        handleEdit(index, row) {
+           row.edit = false
+            // editRecommendList(row).then(res => {
+            //     this.$message({
+            //         message: res.msg,
+            //         type: 'success'
+            //     })
+            //     row.old_name = row.name
+            //     row.edit = false
+            // })
+        },
+
+        //取消修改分类
+        handleCancel(row) {
+            row.edit = false
+            // row.name = row.old_name
+        },
+
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  // /Recommend/index
-  created() {
-    this.getRecommendList()
-  },
+  created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
