@@ -14,7 +14,7 @@
           <div class="grid-content bg-purple-dark rolemiddle">
             <!-- 添加角色按钮 -->
             <el-button type="primary" plain
-            @click="addRole">添加角色</el-button>
+            @click="addRolebutton">添加角色</el-button>
           </div>
         </el-col>
         <!-- 添加搜索功能结束 -->
@@ -22,14 +22,16 @@
         <!-- 显示角色表格 roletable -->
         <el-col>
           <div class="grid-content bg-purple-dark roletable">
-            <el-table :data="tableData" border style="width: 100%">
-              <el-table-column type="index" label="ID" align="center" width="60px"></el-table-column>
-              <el-table-column prop="name" label="角色" align="center"></el-table-column>
+            <el-table :data="list" border style="width: 100%">
+              <el-table-column type="index" label="ID" align="center" width="60px" prop="id"></el-table-column>
+              <el-table-column prop="role_name" label="角色" align="center"></el-table-column>
               <el-table-column label="操作" align="center" width="500px">
                 <!-- 编辑按键 弹出框 -->
-                <el-button type="primary" size="mini" @click="editorRole">编辑</el-button>
-                <el-button type="success" size="mini" @click="power">分配权限</el-button>
-                <el-button type="danger" size="mini">删除</el-button>
+                <template slot-scope="scope">
+                  <el-button type="primary" size="mini" @click="editorRolebutton(scope.$index,scope.row)">编辑</el-button>
+                  <el-button type="success" size="mini" v-if="scope.row.id != 1" @click="power(scope.$index,scope.row)">分配权限</el-button>
+                  <el-button type="danger" size="mini" v-if="scope.row.id != 1" @click="deleteRole(scope.$index,scope.row)">删除</el-button>
+                </template>
               </el-table-column>
             </el-table>
           </div>
@@ -43,11 +45,11 @@
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="currentPage4"
+                :current-page="page"
                 :page-sizes="[10, 25, 50, 100]"
-                :page-size="10"
+                :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="4"
+                :total="total"
               ></el-pagination>
             </div>
           </div>
@@ -57,27 +59,33 @@
         <!-- 点击添加/编辑角色后的显示框 -->
         <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%">
         <el-form :model="form" label-width="80px" status-icon :rules="rules">
-        <el-form-item label="角色名" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
-        </el-form-item>
+            <el-form-item label="角色名" prop="role_name">
+              <el-input v-model="form.role_name"></el-input>
+            </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="onSubmit()">确 定</el-button>
         </div>
       </el-dialog>
       <!-- 添加角色显示框结束 -->
 
       <!-- 点击分配角色显示框 -->
-      <el-dialog title="分配权限" :visible.sync="roleShowup" width="30%">
-        <!-- 树节点 -->
-        <el-tree ref="tree" show-checkbox node-key="id" default-expand-all
-            :data="tree"
-            :default-checked-keys="choseKeys">
-        </el-tree>
-        <el-button type="primary" style="float: right">确定分配</el-button>
-        <!-- 多选框结束 -->
+      <el-dialog :visible.sync="showDialogDistribution"
+            title="分配权限"
+            width="30%"
+            class="dialog">
+            <el-tree ref="tree"
+                :data="tree"
+                show-checkbox
+                node-key="id"
+                default-expand-all
+                :default-checked-keys="choseKeys"
+                class="my-dialog">
+            </el-tree>
+            <el-button type="primary" class="rolebutton" @click="giveAccess">确定分配</el-button>
       </el-dialog>
+      <!-- 多选框结束 -->
       <!-- 点击分配角色显示框结束 -->
       </el-row>
     </div>
@@ -85,7 +93,6 @@
 </template>
 
 <script>
-const cityOptions = ['添加快递公司', '修改快递公司', '删除快递公司'];
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 export default {
@@ -95,56 +102,23 @@ export default {
     //这里存放数据
     return {
       input: "",
-      // 表格
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
-      // 角色规定
-      ruleForm: {
-        name:""
-      },
+      list:[],
       // 分页
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 5,
+      pageSize:10,
+      page:1,
+      total:0,
       // 默认弹出框不可见
       dialogFormVisible:false,
       // 引入的角色表单
       form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
+          role_name: '',
+          id:0,
+      },
         // 标题名
         title:"",
         name:"",
         // 对话框
-        roleShowup:false,
+        showDialogDistribution:false,
         // 角色输入框规定
         rules: {
           name: [
@@ -163,43 +137,89 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    handleSizeChange(pageSize) {
+      console.log(`每页 ${pageSize} 条`);
     },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+    handleCurrentChange(page) {
+      console.log(`当前页: ${page}`);
     },
-    addRole:function() {
+    addRolebutton:function() {
+      this.form.role_name = "",
       this.dialogFormVisible = true;
       this.title = "添加角色";
     },
-    editorRole:function() {
+    editorRolebutton:function(index,row) {
+      console.log(row.id);
       this.dialogFormVisible = true;
       this.title = "编辑角色";
-      // 添加编辑角色功能
+      // 将此角色数据渲染到页面上
+      this.form.role_name = row.role_name;
+      this.form.id = row.id;
     },
-    power:function() {
-      this.roleShowup = true;
+    // 权限
+    power:function(index,info) {
+      this.showDialogDistribution = true;
+      // console.log(info);
       // 后台获取用户权限
-    }
-    // 提交表单
-    // submitForm(formName) {
-    //     this.$refs[formName].validate((valid) => {
-    //       if (valid) {
-    //         alert('submit!');
-    //       } else {
-    //         console.log('error submit!!');
-    //         return false;
-    //       }
-    //     });
-    //   },
-    //   resetForm(formName) {
-    //     this.$refs[formName].resetFields();
-    //   },
+      this.$http.get("/role/giveAccess?"+"id="+info.id+"&role_name="+info.role_name).then(res=> {
+        console.log(res);
+        this.temp_id = info.id
+        this.tree ? this.tree = res.data.tree : null
+        this.choseKeys = res.data.choseKeys ? res.data.choseKeys : []
+      })
+    },
+    // 分配权限
+    giveAccess() {
+      const ruleStr = this.$refs.tree.getCheckedKeys().join(',');
+      const data = { id: this.temp_id, rule: ruleStr };
+      this.$http.post("role/giveAccess",data).then(res => {
+        console.log(res);
+          this.$message({
+              message: res.msg,
+              type: 'success'
+          })
+          this.showDialogDistribution = false;
+      })
+    },
+    // 表格 分页栏数据渲染
+    getRole() {
+      this.$http.get("/role/index").then(res=> {
+        // console.log(res);
+        this.list = res.data.data;
+        this.form.user_name = res.data.data.role_name;
+        this.form.id = res.data.data.id;
+        this.pageSize = res.data.per_page;
+        this.page = res.data.current_page;
+        this.total = res.data.total;
+      })
+    },
+    // 提交功能
+    onSubmit() {
+      if(this.form.id==undefined) {
+        // 提交时id名为空
+        this.$http.post("/role/roleAdd",this.form).then(res=> {
+        this.dialogFormVisible = false;
+        })
+      }else {
+        // 更改时id名存在
+        this.$http.post("/role/roleEdit",this.form).then(res=> {
+          this.dialogFormVisible = false;
+          this.form.id = "";
+        })
+      }
+      this.getRole();
+    },
+    // 删除功能
+    deleteRole(index,row) {
+      this.$http.post("/role/roleDel",{id:row.id}).then(res=> {
+        this.getRole();
+      })
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     // this.getUserList();
+    this.getRole();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -238,6 +258,15 @@ export default {
     .roleselect {
       float: right;
     }
-  }
+      .my-dialog {
+        height: 260px;
+        overflow-y: scroll;
+      }
+      .rolebutton {
+        margin: 0px 130px;
+        margin-top: 30px;
+      }
+    }
+
 }
 </style>

@@ -103,8 +103,7 @@ export default {
         if (valid) {
           alert("submit!");
         //   发起添加用户的请求并跳转页面
-        this.$http.post("/user/userAdd",this.ruleForm
-        ).then(res=> {
+        this.$http.post("/user/userAdd",this.ruleForm).then(res=> {
           // this.$message({
           //   message:res.msg,
           //   type:"success"
