@@ -11,8 +11,8 @@
     <el-row>
       <el-col :span="24">
         <div class="member-search">
-            <el-input v-model="input"   placeholder="请输入内容"></el-input>
-            <el-button type="primary">搜索</el-button>
+          <el-input v-model="input" placeholder="请输入内容"></el-input>
+          <el-button type="primary">搜索</el-button>
         </div>
       </el-col>
     </el-row>
@@ -70,33 +70,50 @@
       label="操作"
       width="100">
 
-      <template slot-scope="scope">
-                    <el-tooltip content="设置会员是否封停"
-                        placement="top">
-                        <el-switch :active-value="1"
-                            :inactive-value="0"
-                            active-color="#13ce66"
-                            inactive-color="#ff4949"
-                            @click.native="setStatus(scope.$index, scope.row)"
-                            v-model="scope.row.status">
-                        </el-switch>
-                    </el-tooltip>
-                </template>
-    </el-table-column>
+    <!-- 会员列表 -->
+    <el-table
+      :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+      border
+      style="width: 100%"
+    >
+      <el-table-column prop="id" label="ID" width="55"></el-table-column>
+      <el-table-column prop="tel" label="电话号码" width="180"></el-table-column>
+      <el-table-column prop="true_name" label="真实姓名" width="180"></el-table-column>
+      <el-table-column prop="status" label="状态" width="180">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.status == 1">正常</el-tag>
+          <el-tag type="warning" v-else>封停</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="amoney" label="内置积分" width="120"></el-table-column>
+      <el-table-column prop="add_time" label="注册时间" width="240"></el-table-column>
+      <el-table-column prop="last_login_time" label="最后登录时间" width="240"></el-table-column>
+      <el-table-column prop="caozuo" label="操作" width="100">
+        <template slot-scope="scope">
+          <el-tooltip content="设置会员是否封停" placement="top">
+            <el-switch
+              :active-value="1"
+              :inactive-value="0"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              @click.native="setStatus(scope.$index, scope.row)"
+              v-model="scope.row.status"
+            ></el-switch>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+    </el-table>
 
-  </el-table>
-
- <!-- 分页 -->
-       <el-pagination
-
+    <!-- 分页 -->
+    <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="currentPage4"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="10"
+      :current-page="currentPage"
+      :page-sizes="[1, 10, 20, 40]"
+      :page-size="1"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="4">
-    </el-pagination>
+      :total="tableData.length"
+    ></el-pagination>
   </div>
 </template>
 
@@ -110,33 +127,10 @@ export default {
   data() {
     //这里存放数据
     return {
-     input:"",
-     tableData:[
-         {
-            id:12,
-            phone:1465461265,
-            name:"梨花颂",
-            status:1,
-            jifen:121.0,
-            date:123123,
-            time:151156,
-            caozuo:123
-
-         },
-          {
-            id:12,
-            phone:1465461265,
-            name:'防守打法',
-            status:true,
-            jifen:121.0,
-            date:123123,
-            time:151156,
-            caozuo:123
-
-         },
-
-         ],
-          currentPage4: 4
+      input: "",
+      tableData: [],
+      currentPage: 1, //初始页
+      pagesize: 1, //每页的数据
     };
   },
   //监听属性 类似于data概念
@@ -145,24 +139,38 @@ export default {
   watch: {},
   //方法集合
   methods: {
-          setStatus(index, row) {
-            const status = row.status == 1 ? 0 : 1;
-            
-
-          
-        },
-          handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      }
-      
+    setStatus(index, row) {
+      const status = row.status == 1 ? 0 : 1;
+      console.log(row.id);
+      this.$http
+        .post("member/changeStatus", {
+          id: row.id,
+          status: row.status,
+        })
+        .then((res) => {
+          row.status = res.status;
+        });
+    },
+    handleSizeChange(size) {
+      this.pagesize = size;
+      console.log(`每页 ${this.pagesize} 条`);
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      console.log(`当前页: ${this.currentPage}`);
+    },
+    gitList() {
+      this.$http.get("member/index").then((res) => {
+        this.tableData = res.data.data;
+      });
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    this.gitList();
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
@@ -179,17 +187,17 @@ export default {
   text-align: left;
   padding: 10px;
 }
-.member-search{
-    text-align: right;
-    padding: 15px;
-    height: 50px;
-  .el-input{
-      margin-right:5px ;
-      width: 200px;
+.member-search {
+  text-align: right;
+  padding: 15px;
+  height: 50px;
+  .el-input {
+    margin-right: 5px;
+    width: 200px;
   }
 }
-.el-pagination{
-    padding: 10px;
-    text-align: right;
+.el-pagination {
+  padding: 10px;
+  text-align: right;
 }
 </style>

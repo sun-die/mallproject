@@ -4,31 +4,31 @@
     <h4 class="orderTitle">快递公司列表</h4>
     <!-- 添加快递公司  弹出框 -->
     <div>
-      <el-button type="primary" plain @click="dialogFormVisible = true;">添加快递公司</el-button>
+      <el-button type="primary" plain @click="addExpress"  :rules="formRule">添加快递公司</el-button>
       <el-dialog title="添加快递公司" :visible.sync="dialogFormVisible" width="450px">
-        <el-form :model="form" append-to-bod="true">
+        <el-form :model="form" append-to-bod="true" ref="cateForm">
           <el-form-item label="快递公司" :label-width="formLabelWidth" required>
-            <el-input v-model="form.name" autocomplete="off" value> </el-input>
+            <el-input v-model="form.name" autocomplete="off" value></el-input>
           </el-form-item>
         </el-form>
         <el-form :model="form">
           <el-form-item label="快递公司电话" :label-width="formLabelWidth">
-            <el-input v-model="form.companyTel" autocomplete="off"></el-input>
+            <el-input v-model="form.tel" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <el-form :model="form">
           <el-form-item label="快递公司地址" :label-width="formLabelWidth">
-            <el-input v-model="form.site" autocomplete="off"></el-input>
+            <el-input v-model="form.address" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <el-form :model="form">
           <el-form-item label="联系人/收件人" :label-width="formLabelWidth">
-            <el-input v-model="form.linkman" autocomplete="off"></el-input>
+            <el-input v-model="form.contact" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <el-form :model="form">
           <el-form-item label="联系人电话" :label-width="formLabelWidth">
-            <el-input v-model="form.phone" autocomplete="off"></el-input>
+            <el-input v-model="form.contact_tel" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -36,6 +36,7 @@
         </div>
       </el-dialog>
     </div>
+    <!-- 添加快递公司  弹出框    结束-->
     <!-- 快递公司  名片 -->
     <div class="business">
       <el-row :gutter="20">
@@ -44,30 +45,43 @@
             <h2 class="title">
               <div>{{item.name}}</div>
               <div class="titleButton">
-                <el-button type="success" icon="el-icon-edit" circle size="small"  @click="redact(index)"></el-button>
-                <el-button type="danger" icon="el-icon-delete" circle size="small" @click="deletes(index)"></el-button>
+                <el-button
+                  type="success"
+                  icon="el-icon-edit"
+                  circle
+                  size="small"
+                  @click="redact(index)"
+                ></el-button>
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  circle
+                  size="small"
+                  @click="handleDel(item.id, index)"
+                ></el-button>
               </div>
             </h2>
             <div>
               <div>公司电话</div>
-              <div>{{item.companyTel}}</div>
+              <div>{{item.tel}}</div>
             </div>
             <div>
               <div>公司地址</div>
-              <div>{{item.site}}</div>
+              <div>{{item.address}}</div>
             </div>
             <div>
               <div>联系人/收件人</div>
-              <div>{{item.linkman}}</div>
+              <div>{{item.contact}}</div>
             </div>
             <div>
               <div>联系人电话</div>
-              <div>{{item.phone}}</div>
+              <div>{{item.contact_tel}}</div>
             </div>
           </div>
         </el-col>
       </el-row>
     </div>
+    <!-- 快递公司  名片  结束 -->
   </div>
 </template>
 
@@ -84,30 +98,18 @@ export default {
       dialogFormVisible: false,
       form: {
         name: "", //快递公司
-        companyTel: "", //快递公司电话
-        site: "", //快递公司地址
-        linkman: "", //l联系人
-        phone: "", //联系人电话
+        tel: "", //快递公司电话
+        address: "", //快递公司地址
+        contact: "", //l联系人
+        contact_tel: "", //联系人电话
       },
       formLabelWidth: "120px",
-      card: [
-        {
-          id: 1,
-          name: "顺丰快递",
-          companyTel: "18888888888",
-          site: "深圳千锋",
-          linkman: "小刘",
-          phone: 18888888888,
-        },
-        {
-          id: 2,
-          name: "顺丰快递",
-          companyTel: "18888888888",
-          site: "深圳千锋",
-          linkman: "小李",
-          phone: 18888888888,
-        },
-      ],
+      card: [],
+      formRule: {
+                name: [
+                    { required: true, message: '快递公司必填', trigger: 'blur' }
+                ]
+            }
     };
   },
   //监听属性 类似于data概念
@@ -116,33 +118,88 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    //删除事件
-    deletes:function(index){
-       this.card.splice(index,1)
+    //请求数据
+    handelUserList() {
+      this.$http
+        .get("/express/index", {})
+        .then((res) => {
+          this.card = res.data; //获取的数据
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    //编辑修改事件
+    //添加快递公司
+    addExpress() {
+      this.dialogFormVisible = true;
+      Object.keys(this.form).map((item) => {
+        this.form[item] = "";
+      });
+    },
+    //删除事件
+    handleDel(id, index) {
+      this.$confirm("是否确定删除快递公司", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$http.post("express/delExpress", {
+            id: id,
+          })
+          .then((res) => {
+            console.log(res);
+            this.handelUserList();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+    },
+    //修改事件
     redact: function (index) {
+      this.form = {};
       this.form = this.card[index];
       this.dialogFormVisible = true;
-      return index
+      return index;
     },
     //提交事件
     submit: function () {
-      for(var key in this.form){
-        if( this.form[key]==''){
-            alert('必须全部填好！！！明白了吗？？')
-            return
+      this.$refs.cateForm.validate((valid) => {
+        if (!valid) {
+          return false;
         }
+        if (this.form.id > 0) {
+          //修改
+            this.$http.post('express/editExpress',this.form)
+            .then(res =>{
+              this.$message({
+                message:res.msg,
+                type:'success'
+              })
+              this.handelUserList()//再次获取数据渲染
+              this.dialogFormVisible = false
+            });
+        } else {
+            //添加
+            this.$http.post('express/addExpress',this.form)
+            .then(res =>{
+              this.$message({
+                message:res.msg,
+                type:'success'
+              })
+              this.card.unshift(this.form)//追加到数据最前面
+              this.dialogFormVisible = false
+            })
+          }
       }
-      this.dialogFormVisible = false;
-      this.card.push(this.form)
-      this.form = {}
-    },
+    )},
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    this.handelUserList();
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
@@ -169,7 +226,7 @@ export default {
   background: rgb(230, 251, 227);
   border-radius: 10px;
   padding: 15px 0;
-  margin-bottom:20px ;
+  margin-bottom: 20px;
   h2.title {
     display: flex;
     height: 50px;
