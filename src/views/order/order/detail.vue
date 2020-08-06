@@ -3,7 +3,7 @@
     <div>
         <div class='orderDeails'>
             <div class="orderDeailsLeft">
-                <el-steps :active="userList.uid" align-center width='300px'>
+                <el-steps :active="userList.uid+1" align-center width='300px'>
                     <el-step title="添加商品"></el-step>
                     <el-step title="等待支付" ></el-step>
                     <el-step title="等待发货"></el-step>
@@ -94,10 +94,7 @@ methods: {
  //获取数据
     handelUserList(){
         this.$http.get("/order/index",{}
-        ).then(res=>{
-        console.log(res)
-        //  this.userList = res.data.data
-        //console.log(this.$route.query.id)
+        ).then(res=>{      
          for(var item of res.data.data){
              if(item.id == this.$route.query.id){
                   this.userList = item
@@ -168,10 +165,10 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
                     margin-right: 15px;
                 }
                 .listLeft2 {
-                p {
-                    line-height: 50px;
-                    text-align: left;
-                }
+                    p {
+                        line-height: 50px;
+                        text-align: left;
+                    }
                 }
             }
             .listRight {
