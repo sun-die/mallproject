@@ -205,8 +205,8 @@ export default {
   padding: 20px 0;
   text-align: left;
 }
-.el-pagination {
-  padding: 10px;
-  text-align: right;
+.el-pagination{
+    padding: 10px;
+    text-align: right;
 }
 </style>

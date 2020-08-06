@@ -7,8 +7,8 @@
       <el-radio-button :label="true">收起</el-radio-button>
   </el-radio-group> -->
   <div class="toggle-button" @click="toggleCollapse">|||</div>
-<el-menu default-active="1-4-1" 
-  class="el-menu-vertical-demo" 
+<el-menu class="el-menu-vertical-demo" 
+  :default-active="$route.path"
   background-color="#263445" 
   text-color="#fff"  
   router
@@ -80,7 +80,8 @@ components: {},
 data() {
 //这里存放数据
   return {
-    isCollapse: false
+    isCollapse: false,
+    activeNav:""
   };
 },
 //监听属性 类似于data概念
@@ -91,7 +92,7 @@ watch: {},
 methods: {
   toggleCollapse(){
     this.isCollapse=!this.isCollapse;
-  }
+  },
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -99,7 +100,10 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-
+  var _this=this
+    var href=window.location.href
+    href=href.split('/#')[1]
+    _this.activeNav=href
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前

@@ -14,7 +14,7 @@
       </el-select>
       <el-button type="primary" @click='state'>搜索</el-button>
     </div>
-    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" border>
+    <el-table :data="userList.slice((currentPage-1)*pagesize,currentPage*pagesize)" border>
       <el-table-column width='50px' align='center' prop="id" label="ID" border></el-table-column>
       <el-table-column width='200px' align='center' prop="no" label="订单编号"></el-table-column>
       <el-table-column align='center' prop="post_name" label="用户"></el-table-column>
@@ -47,6 +47,7 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
+      background
       :current-page="currentPage"
       :page-sizes="[5,10, 20,50]"
       :page-size="5"
@@ -78,7 +79,6 @@ export default {
        currentPage: 1,//初始页
        pagesize:5,//每页的数据
        userList:[],//获取的数据
-       tableData:[]
     };
   },
   //监听属性 类似于data概念
@@ -87,15 +87,27 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    //搜索功能
+      //请求数据
+      handelUserList(){
+        this.$http.get("/order/index",{}
+        ).then(res=>{
+            this.userList = res.data.data//获取的数据
+        }).catch(err=>{
+            console.log(err)
+        }) 
+      },
+      //搜索功能
       state:function(){
           var shis =  this.value 
-          this.tableData = this.userList
-          var arr = this.tableData.filter(function(item){ 
-            console.log(item)                 
-              return item.pay_way == shis
-          })  
-          this.tableData = arr
+          this.$http.get("/order/index",{}
+            ).then(res=>{
+                var arr = res.data.data.filter(function(item){               
+                return item.pay_way == shis//返回对应的数据
+              })  
+              this.userList = arr//获取对应的数据
+            }).catch(err=>{
+              console.log(err)
+            })          
       },
       //每页显示多少条数据
        handleSizeChange(size) {
@@ -106,17 +118,7 @@ export default {
       handleCurrentChange(currentPage) {
         this.currentPage = currentPage
         console.log(`当前页: ${this.currentPage}`);
-      },
-      //请求数据
-      handelUserList(){
-        this.$http.get("/order/index",{}
-        ).then(res=>{
-         this.userList = res.data.data//获取的数据
-        this.tableData = res.data.data
-        }).catch(err=>{
-          console.log(err)
-        }) 
-      },
+      },   
       //详情页跳转
       detail:function(id){
          console.log(id)
@@ -128,9 +130,7 @@ export default {
      this.handelUserList()
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-
-  },
+  mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() { }, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
@@ -166,7 +166,13 @@ export default {
     height: 80px;
     text-align: right;
     line-height: 80px;
+    button{
+      margin-left:10px;
+    }
   }
 }
-
+.el-pagination{
+  float: right;
+  margin-top:20px ;
+}
 </style>
