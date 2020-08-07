@@ -1,39 +1,41 @@
-npm<!-- 快递公司  -->
+<!-- 快递公司  -->
 <template>
   <div class>
     <h4 class="orderTitle">快递公司列表</h4>
     <!-- 添加快递公司  弹出框 -->
     <div>
-      <el-button type="primary" plain @click="addExpress"  :rules="formRule">添加快递公司</el-button>
+       <el-button type="primary" plain @click="addExpress" >添加快递公司</el-button>
+
       <el-dialog title="添加快递公司" :visible.sync="dialogFormVisible" width="450px">
-        <el-form :model="form" append-to-bod="true" ref="cateForm">
-          <el-form-item label="快递公司" :label-width="formLabelWidth" required>
+        <el-form :model="form" append-to-bod="true" ref="cateForm"   :rules="formRule" >
+          <el-form-item label="快递公司" :label-width="formLabelWidth" required  prop="name">
             <el-input v-model="form.name" autocomplete="off" value></el-input>
           </el-form-item>
-        </el-form>
-        <el-form :model="form">
-          <el-form-item label="快递公司电话" :label-width="formLabelWidth">
+
+            <el-form-item label="快递公司电话" :label-width="formLabelWidth" prop="tel">
             <el-input v-model="form.tel" autocomplete="off"></el-input>
           </el-form-item>
-        </el-form>
-        <el-form :model="form">
-          <el-form-item label="快递公司地址" :label-width="formLabelWidth">
+            <el-form-item label="快递公司地址" :label-width="formLabelWidth" prop="address">
             <el-input v-model="form.address" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <el-form :model="form">
-          <el-form-item label="联系人/收件人" :label-width="formLabelWidth">
+            </el-form-item>
+
+             <el-form-item label="联系人/收件人" :label-width="formLabelWidth" prop="contact">
             <el-input v-model="form.contact" autocomplete="off"></el-input>
           </el-form-item>
-        </el-form>
-        <el-form :model="form">
-          <el-form-item label="联系人电话" :label-width="formLabelWidth">
+
+          <el-form-item label="联系人电话" :label-width="formLabelWidth" prop="contact_tel">
             <el-input v-model="form.contact_tel" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submit">提交</el-button>
-        </div>
+          </el-form-item> 
+
+
+
+          <!-- <div slot="footer" class="dialog-footer">
+           <el-button type="primary" @click="submit">提交</el-button>
+        </div> -->
+        </el-form>  
+           <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click=" submit">提 交</el-button>
+      </div>
       </el-dialog>
     </div>
     <!-- 添加快递公司  弹出框    结束-->
@@ -167,8 +169,8 @@ export default {
       this.$refs.cateForm.validate((valid) => {
         if (!valid) {
           return false;
-        }
-        if (this.form.id > 0) {
+        }else{
+          if (this.form.id > 0) {
           //修改
             this.$http.post('express/editExpress',this.form)
             .then(res =>{
@@ -191,6 +193,8 @@ export default {
               this.dialogFormVisible = false
             })
           }
+        }
+        
       }
     )},
   },
