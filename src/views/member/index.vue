@@ -123,7 +123,7 @@ export default {
       }
         this.$http.get('member/index').then(res=>{
               var arr = res.data.data.filter(function(item){ 
-                  console.log(item)              
+                  console.log(input)              
                   return item.id == input || item.tel === input || item.status == input//返回对应的数据
                 })
                 this.tableData = arr

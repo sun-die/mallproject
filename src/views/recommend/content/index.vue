@@ -38,8 +38,12 @@
        
       :cell-style="rowClass"  
       :header-cell-style="headClass"
+<<<<<<< HEAD
+      style="width: 100%">
+=======
        style="width: 100%"
     >
+>>>>>>> 7610304e3d9134923827e113d9bc028d478c3133
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
       <el-table-column prop="pinfo.name" label="所属分类" ></el-table-column>
       <el-table-column prop="name" label="推荐信息"></el-table-column>
@@ -54,7 +58,6 @@
       </el-table-column>
       <el-table-column prop="link" label="链接"></el-table-column>
       <el-table-column prop="sort" label="排序" width="60"></el-table-column>
-
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -370,7 +373,7 @@ export default {
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-     this._getDAta();
+    this._getDAta();
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
