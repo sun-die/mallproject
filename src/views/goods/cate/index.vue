@@ -21,8 +21,7 @@
       </el-col>
     </el-row>
     <!-- 表格主体开始 -->
-    <el-table :data="tableData" 
-    style="width: 100%" border highlight-current-row>
+    <el-table :data="tableData" style="width: 100%" border highlight-current-row>
       <!-- 隐藏的分类属性开始 -->
       <el-table-column type="expand">
         <template slot-scope="scope">
@@ -32,7 +31,7 @@
             v-for="(tag,index) in scope.row.sku"
             closable
             :disable-transitions="false"
-            @close="handleClose(scope.row,index)"
+            @close="handleClose(scope.row,tag.id,index,1)"
           >{{tag.name}}</el-tag>
           <el-input
             class="input-new-tag"
@@ -74,13 +73,14 @@
             icon="el-icon-refresh"
             size="mini"
             type="warning"
-            @click="scope.row.edit=!scope.row.edit"
+            @click="handleCancel(scope.row)"
           >取消</el-button>
           <el-button
             v-if="scope.row.edit"
             icon="el-icon-circle-check-outline"
             size="mini"
             type="success"
+            @click="handleEdit(scope.$index, scope.row)"
           >保存</el-button>
           <el-button
             v-else
@@ -155,17 +155,18 @@ export default {
   data() {
     //这里存放数据
     return {
+      // edit:false,
       tableData: [],
       inputVisible: false,
       inputValue: "",
       // pagesize:null,
       // currentPage: null,
-      total:null,
+      total: null,
       showDialog: false,
       cateName: "",
       params: {
         name: "",
-        pageSize:10
+        pageSize: 10,
       },
       form: {
         name: "",
@@ -189,16 +190,23 @@ export default {
     //请求获取分类数据
     _getData() {
       // let _this = this;
-      this.$http.get("cate/index",{
-        params:this.params
-      }).then((res) => {
-        this.tableData = res.data.data;
-        this.total = res.data.total;
-        // _this.pageSize = res.data.per_page;
-        // _this.page = res.data.current_page;
-        console.log(this.tableData);
-        console.log(res);
-      });
+      this.$http
+        .get("cate/index", {
+          params: this.params,
+        })
+        .then((res) => {
+          res.data.data.forEach((item) => {
+            item.edit = false;
+            item.old_name = item.name;
+            item.old_sort = item.sort;
+          });
+          this.tableData = res.data.data;
+          this.total = res.data.total;
+          // _this.pageSize = res.data.per_page;
+          // _this.page = res.data.current_page;
+          console.log(this.tableData);
+          console.log(res);
+        });
     },
     //添加顶级商品分类属性
     addCate() {
@@ -225,18 +233,39 @@ export default {
       });
     },
 
-  //搜索分类
-  searchCate(name){
-    this.$http.get('cate/index',{
-    }).then(res=>{
-      let arr=res.data.data.filter((item)=>{
-          return item.name === name
-      })
-      this.tableData = arr
-      this.total = arr.length
-    })
-  },
-
+    //搜索顶级分类
+    searchCate(name) {
+      this.$http.get("cate/index", {}).then((res) => {
+        let arr = res.data.data.filter((item) => {
+          return item.name === name;
+        });
+        this.tableData = arr;
+        this.total = arr.length;
+      });
+    },
+    // 编辑顶级分类
+    handleEdit(row) {
+      console.log(row);
+      row.edit = !row.edit;
+    },
+    // 取消编辑顶级分类
+    handleCancel(row) {
+      console.log(row);
+      row.edit = false;
+      row.name = row.old_name;
+      row.sort = row.old_sort;
+    },
+    //保存编辑的顶级分类
+    handleEdit(index, row) {
+      this.$http.post("cate/editCate", row).then((res) => {
+        this.$message({
+          message: res.msg,
+          type: "success",
+        });
+        row.old_name = row.name;
+        row.edit = false;
+      });
+    },
     //删除顶级分类属性
     handleDel(index, row) {
       this.$confirm("是否确定删除", "警告", {
@@ -249,7 +278,7 @@ export default {
             id: row.id,
           })
           .then(() => {
-            console.log(row)
+            console.log(row);
             this.$message({
               message: "删除成功",
               type: "success",
@@ -259,8 +288,12 @@ export default {
       });
     },
     //删除分类属性
-    handleClose(sc, index) {
-      sc.sku.splice(index, 1);
+    handleClose(row,id,index,attr) {
+      this.$http.post('cate/delCateSku',{
+        id:id
+      }).then(res=>{
+        row.sku.splice(index,1)
+      })
     },
     //编辑分类属性
     showInput() {
@@ -270,7 +303,12 @@ export default {
       });
     },
     //提交分类属性
-    handleInputConfirm(sc, attr) {
+    handleInputConfirm(row, attr) {
+      // const data = { pid: row.id, level: attr, name: this.inputValue }
+      // this.$http.post('cate/addCateSku',data)
+      // .then(res=>{
+
+      // })
       let inputValue = this.inputValue;
       if (inputValue) {
         sc.sku.push({
@@ -280,23 +318,14 @@ export default {
       this.inputVisible = false;
       this.inputValue = "";
     },
-    //取消编辑分类
-    // handleCancel(edit) {
-    //   // console.log(row.old_name);
-    //   console.log(row);
-    //   edit = false;
-    //   // row.name = row.old_name
-    //   // row.sort = row.old_sort
-    // },
-
     handleSizeChange(val) {
-      this.params.pageSize = val
+      this.params.pageSize = val;
       console.log(`每页 ${val} 条`);
-      this._getData()
+      this._getData();
     },
     handleCurrentChange(val) {
-      this.params.page = val
-      this._getData()
+      this.params.page = val;
+      this._getData();
       console.log(`当前页: ${val}`);
     },
   },
@@ -304,7 +333,7 @@ export default {
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-     this._getData();
+    this._getData();
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前

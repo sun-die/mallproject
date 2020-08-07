@@ -31,25 +31,25 @@
     <el-table :data="tableData" style="width: 100%" border highlight-current-row>
       <el-table-column align="center" width="48px"></el-table-column>
       <el-table-column align="center" prop="id" label="ID" width="60px"></el-table-column>
-      <el-table-column align="center" prop="title" label="商品名" width="140px"></el-table-column>
-      <el-table-column align="center" prop="img" label="商品图片" width="136px">
+      <el-table-column align="center" prop="title" label="商品名"></el-table-column>
+      <el-table-column align="center" prop="img" label="商品图片">
         <template slot-scope="scope">
           <div class="img-container">
             <img :src="'http://www.masterjoy.top/uploads/' + scope.row.img" class="img-container" />
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="cate_id" label="所属分类" width="136px"></el-table-column>
-      <el-table-column align="center" prop="market_price" label="市场价" width="136px"></el-table-column>
-      <el-table-column align="center" prop="price" label="售价" width="136px"></el-table-column>
+      <el-table-column align="center" prop="cate_id" label="所属分类"></el-table-column>
+      <el-table-column align="center" prop="market_price" label="市场价"></el-table-column>
+      <el-table-column align="center" prop="price" label="售价"></el-table-column>
       <el-table-column align="center" prop="stock" label="库存" width="80px"></el-table-column>
-      <el-table-column align="center" prop="sales_volume" label="销量" width="80px"></el-table-column>
+      <el-table-column align="center" prop="sales_volume" label="销量"></el-table-column>
       <el-table-column align="center" prop="status" label="状态" width="80px">
         <el-tag type="success">
           <span>上架</span>
         </el-tag>
       </el-table-column>
-      <el-table-column align="center" prop label="操作">
+      <el-table-column align="center" prop label="操作" width="150px">
         <el-button type="primary" size="mini" @click="editgoods">编辑</el-button>
         <el-button type="danger" size="mini">删除</el-button>
       </el-table-column>
@@ -79,7 +79,7 @@ export default {
   data() {
     //这里存放数据
     return {
-      cate: ["吃", "喝", "玩", "乐", "衣", "食", "住", "行"],
+      cate: {},
       params: {
         title: "",
         cate_id: "",
