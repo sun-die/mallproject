@@ -23,19 +23,19 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="id" label="ID" width="55"></el-table-column>
-      <el-table-column prop="tel" label="电话号码" width="180"></el-table-column>
-      <el-table-column prop="true_name" label="真实姓名" width="180"></el-table-column>
-      <el-table-column prop="status" label="状态" width="180">
+      <el-table-column align='center' prop="id" label="ID" width="55"></el-table-column>
+      <el-table-column align='center' prop="tel" label="电话号码" width="180"></el-table-column>
+      <el-table-column align='center' prop="true_name" label="真实姓名" width="180"></el-table-column>
+      <el-table-column align='center' prop="status" label="状态" width="180">
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.status == 1">正常</el-tag>
           <el-tag type="warning" v-else>封停</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="amoney" label="内置积分" width="120"></el-table-column>
-      <el-table-column prop="add_time" label="注册时间" width="240"></el-table-column>
-      <el-table-column prop="last_login_time" label="最后登录时间" width="240"></el-table-column>
-      <el-table-column prop="caozuo" label="操作" width="100">
+      <el-table-column align='center' prop="amoney" label="内置积分" width="120"></el-table-column>
+      <el-table-column align='center' prop="add_time" label="注册时间" width="240"></el-table-column>
+      <el-table-column align='center' prop="last_login_time" label="最后登录时间" width="240"></el-table-column>
+      <el-table-column align='center' prop="caozuo" label="操作" width="100">
         <template slot-scope="scope">
           <el-tooltip content="设置会员是否封停" placement="top">
             <el-switch
@@ -121,7 +121,7 @@ export default {
       }
         this.$http.get('member/index').then(res=>{
               var arr = res.data.data.filter(function(item){ 
-                  console.log(item)              
+                  console.log(input)              
                   return item.id == input || item.tel === input || item.status == input//返回对应的数据
                 })
                 this.tableData = arr

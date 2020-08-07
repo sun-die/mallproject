@@ -23,8 +23,7 @@
       border
       :cell-style="rowClass"
       :header-cell-style="headClass"
-      style="width: 100%"
-    >
+      style="width: 100%">
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
       <el-table-column prop="name" label="所属分类" width="200"></el-table-column>
       <el-table-column prop="memo" label="推荐信息"></el-table-column>
@@ -32,7 +31,6 @@
       <el-table-column prop="img" label="图片"></el-table-column>
       <el-table-column prop="link" label="链接"></el-table-column>
       <el-table-column prop="sort" label="排序" width="60"></el-table-column>
-
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -50,8 +48,7 @@
       :visible.sync="dialogFormVisible"
       width="30%"
       text-align="left"
-      @submit.native.prevent
-    >
+      @submit.native.prevent>
       <el-form :model="form" ref="ruleForm" :rules="rules">
         <!-- 选择所属推荐位 -->
         <el-form-item label="选择所属推荐位" prop="name">
@@ -78,8 +75,7 @@
             :show-file-list="false"
             :action="imgPostUrl"
             list-type="pictrue"
-            limit="1"
-          >
+            limit="1">
             <el-button slot="trigger" size="small" v-if="!form.img" type="primary">选取文件</el-button>
             <img :src="cdn+form.img" class="upload-img" v-else slot="trigger" alt />
           </el-upload>
@@ -152,7 +148,6 @@ export default {
 
     skuImgUploadSuccess() {},
 
-
     // 获取数据
     _getDAta() {
       this.$http
@@ -183,7 +178,7 @@ export default {
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-     this._getDAta();
+    this._getDAta();
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
@@ -205,8 +200,8 @@ export default {
   padding: 20px 0;
   text-align: left;
 }
-.el-pagination{
-    padding: 10px;
-    text-align: right;
+.el-pagination {
+  padding: 10px;
+  text-align: right;
 }
 </style>
