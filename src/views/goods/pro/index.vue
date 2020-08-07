@@ -124,7 +124,7 @@ export default {
       return this.$router.push("/product/addgoods");
     },
     editgoods() {
-      return this.$router.push("/product/editgoods");
+      return this.$router.push("/product/addgoods");
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）

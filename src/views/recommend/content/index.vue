@@ -38,12 +38,7 @@
        
       :cell-style="rowClass"  
       :header-cell-style="headClass"
-<<<<<<< HEAD
       style="width: 100%">
-=======
-       style="width: 100%"
-    >
->>>>>>> 7610304e3d9134923827e113d9bc028d478c3133
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
       <el-table-column prop="pinfo.name" label="所属分类" ></el-table-column>
       <el-table-column prop="name" label="推荐信息"></el-table-column>

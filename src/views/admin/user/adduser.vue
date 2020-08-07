@@ -74,15 +74,15 @@ export default {
         // 表单规则
         rules: {
             name: [
-            // { required: true, message: "必填项", trigger: "change" },
+            { required: true, message: "必填项", trigger: "change" },
             { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
             ],
             relname: [
-            // { required: true, message: "必填项", trigger: "change" },
+            { required: true, message: "必填项", trigger: "change" },
             { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
             ],
             region: [
-            // { required: true, message: "必选项", trigger: "blur" },
+            { required: true, message: "必选项", trigger: "blur" },
             ],
             password: [
             { min:6, message: "最少输入六位数", trigger: "blur" },
