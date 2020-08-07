@@ -9,6 +9,12 @@
       <el-breadcrumb-item :to="{ path: '/admin/user'}">后台管理</el-breadcrumb-item>
       <el-breadcrumb-item>后台管理列表</el-breadcrumb-item>
     </el-breadcrumb>
+    <!-- 添加 -->
+    <el-breadcrumb separator="/"  v-show="$route.path=='/admin/addUser/'">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/admin/user'}">后台管理</el-breadcrumb-item>
+      <el-breadcrumb-item>添加管理员</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-breadcrumb separator="/"  v-show="$route.path=='/admin/role'">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item :to="{path:'/admin/user'}">后台管理</el-breadcrumb-item>
@@ -33,6 +39,12 @@
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item :to="{path:'/order/order'}">订单管理</el-breadcrumb-item>
       <el-breadcrumb-item>订单列表</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!-- 添加 -->
+    <el-breadcrumb separator="/"  v-show="$route.path=='/order/order/detail'">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{path:'/order/order'}">订单管理</el-breadcrumb-item>
+      <el-breadcrumb-item>订单详情</el-breadcrumb-item>
     </el-breadcrumb>
      <el-breadcrumb separator="/"  v-show="$route.path=='/order/express'">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>

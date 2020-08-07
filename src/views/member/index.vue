@@ -11,11 +11,13 @@
     <el-row>
       <el-col :span="24">
         <div class="member-search">
-          <el-input v-model="input" placeholder="请输入内容"></el-input>
-          <el-button type="primary">搜索</el-button>
+          <el-input v-model="input" placeholder="手机号/姓名/状态"></el-input>
+          <el-button type="primary" @click="seek">搜索</el-button>
         </div>
       </el-col>
     </el-row>
+     
+      
 
     <!-- 会员列表 -->
     <el-table
@@ -24,17 +26,17 @@
       style="width: 100%"
     >
       <el-table-column prop="id" label="ID" width="55"></el-table-column>
-      <el-table-column prop="tel" label="电话号码" width="180"></el-table-column>
-      <el-table-column prop="true_name" label="真实姓名" width="180"></el-table-column>
-      <el-table-column prop="status" label="状态" width="180">
+      <el-table-column prop="tel" label="电话号码"  ></el-table-column>
+      <el-table-column prop="true_name" label="真实姓名"  ></el-table-column>
+      <el-table-column prop="status" label="状态" >
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.status == 1">正常</el-tag>
           <el-tag type="warning" v-else>封停</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="amoney" label="内置积分" width="120"></el-table-column>
-      <el-table-column prop="add_time" label="注册时间" width="240"></el-table-column>
-      <el-table-column prop="last_login_time" label="最后登录时间" width="240"></el-table-column>
+      <el-table-column prop="amoney" label="内置积分" ></el-table-column>
+      <el-table-column prop="add_time" label="注册时间"  ></el-table-column>
+      <el-table-column prop="last_login_time" label="最后登录时间"  ></el-table-column>
       <el-table-column prop="caozuo" label="操作" width="100">
         <template slot-scope="scope">
           <el-tooltip content="设置会员是否封停" placement="top">
@@ -95,7 +97,7 @@ export default {
           status: row.status,
         })
         .then((res) => {
-          row.status = res.status;
+          row.status = row.status;
         });
     },
     handleSizeChange(size) {
@@ -111,6 +113,22 @@ export default {
         this.tableData = res.data.data;
       });
     },
+    //搜索功能
+    seek(){
+      var input = this.input
+      if(input == '正常'){
+        input = 1
+      }else if(input == '封停'){
+        input = '0'
+      }
+        this.$http.get('member/index').then(res=>{
+              var arr = res.data.data.filter(function(item){ 
+                  console.log(input)              
+                  return item.id == input || item.tel === input || item.status == input//返回对应的数据
+                })
+                this.tableData = arr
+          }) 
+    }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},

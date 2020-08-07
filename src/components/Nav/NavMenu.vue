@@ -11,7 +11,8 @@
   :default-active="$route.path"
   background-color="#263445" 
   text-color="#fff"  
-  router
+   router
+  :unique-opened='true'
   :collapse='isCollapse'
   :collapse-transition="false">
   <el-menu-item index="/pagetop">
@@ -81,7 +82,8 @@ data() {
 //这里存放数据
   return {
     isCollapse: false,
-    activeNav:""
+    activeNav:"",
+    
   };
 },
 //监听属性 类似于data概念
@@ -121,9 +123,11 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
   .el-aside{
     height: 100vh;
     background: #263445;
+   
   }
   .el-menu{
     border-right: 1px solid #263445;
+    
   }
   .toggle-button{
     background: #263445;
@@ -133,5 +137,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
     text-align: center;
     letter-spacing: 0.2em;
     cursor: pointer;
+  
   }
+  
 </style>
