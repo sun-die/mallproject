@@ -42,7 +42,7 @@
     <!-- 快递公司  名片 -->
     <div class="business">
       <el-row :gutter="30">
-        <el-col :span="8" v-for="item,index in card">
+        <el-col :span="8" v-for="(item,index) in card">
           <div class="grid-content bg-purple">
             <h2 class="title">
               <div>{{item.name}}</div>
@@ -145,11 +145,12 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
+        console.log(111);
         this.$http.post("express/delExpress", {
             id: id,
           })
           .then((res) => {
-            console.log(res);
+            console.log(222);
             this.handelUserList();
           })
           .catch((err) => {
@@ -164,6 +165,7 @@ export default {
       this.dialogFormVisible = true;
       return index;
     },
+
     //提交事件
     submit: function () {
       this.$refs.cateForm.validate((valid) => {
@@ -190,7 +192,8 @@ export default {
                 type:'success'
               })
               this.card.unshift(this.form)//追加到数据最前面
-              this.dialogFormVisible = false
+              this.dialogFormVisible = false;
+              this.handelUserList();
             })
           }
         }
