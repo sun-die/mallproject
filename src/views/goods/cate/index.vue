@@ -128,7 +128,6 @@
         <el-form-item label="分类名" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <div>{{form.name}}</div>
         <el-form-item label="排序" prop="sort">
           <el-input v-model.number="form.sort" type="number"></el-input>
         </el-form-item>
