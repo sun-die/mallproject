@@ -4,10 +4,7 @@
     <!-- 标题 -->
     <el-row >
       <el-col :span="24" >
-
-        <div class="title">推荐位内容管理</div>
-
-        
+        <div class="title">推荐位内容管理</div>       
       </el-col>
     </el-row>
 
@@ -17,7 +14,6 @@
         <div class="add-buttom">
           <el-button type="primary" plain @click="handleAdd()">添加推荐内容</el-button>
         </div>
-
          <div class="search">
       <el-select v-model="params.cate_id" placeholder="请选择">
     <el-option
@@ -42,8 +38,12 @@
        
       :cell-style="rowClass"  
       :header-cell-style="headClass"
+<<<<<<< HEAD
+      style="width: 100%">
+=======
        style="width: 100%"
     >
+>>>>>>> 7610304e3d9134923827e113d9bc028d478c3133
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
       <el-table-column prop="pinfo.name" label="所属分类" ></el-table-column>
       <el-table-column prop="name" label="推荐信息"></el-table-column>
@@ -58,7 +58,6 @@
       </el-table-column>
       <el-table-column prop="link" label="链接"></el-table-column>
       <el-table-column prop="sort" label="排序" width="60"></el-table-column>
-
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -120,7 +119,7 @@
             :limit="1"
           >
             <el-button slot="trigger" size="small" v-if="!form.img" type="primary">选取文件</el-button>
-             <img :src="cdn + form.img"
+             <img :src="'http://www.masterjoy.top/uploads/' + form.img"
                             class="upload-img"
                             v-else
                             slot="trigger"
@@ -178,7 +177,7 @@ export default {
                ],
       },
       inputValue: "",
-        imgPostUrl: ' http://www.masterjoy.top/vueapi//common/uploadImg ',
+      imgPostUrl: ' http://www.masterjoy.top/vueapi//common/uploadImg ',
       // imgPostUrl:  this.$http.+ '/common/uploadImg', //图片上传地址
       formLabelWidth: "120px",
     };
@@ -351,7 +350,13 @@ export default {
           this.table_loading = true;
         });
     },
-
+   getDAta(){
+  this.$http.get("/Recommend/index").then(res => {
+            this.cate = res.data
+        }).catch(err => {
+            console.log(err)
+        })
+   },
     // 图片上传
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -362,16 +367,13 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-       this.$http.get("/Recommend/index").then(res => {
-            this.cate = res.data
-        }).catch(err => {
-            console.log(err)
-        })
+        this.getDAta();
+     
 
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-     this._getDAta();
+    this._getDAta();
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
@@ -409,5 +411,8 @@ export default {
 }
 .scope-img {
     width: 53px;
+}
+.upload-img{
+  width: 200px;
 }
 </style>
