@@ -17,58 +17,7 @@
       </el-col>
     </el-row>
      
-     <!-- 会员列表
-     <el-table
-    :data="tableData"
-    border
-    
-    style="width: 100%">
-    <el-table-column
-      prop="id"
-      label="ID"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      prop="phone"
-      label="电话号码"
-     >
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="真实姓名"
-      >
-    </el-table-column>
-    <el-table-column
-      prop="status"
-      label="状态"
       
-       >
-         <template slot-scope="scope">
-                    <el-tag type="success"
-                        v-if="scope.row.status == 1">正常</el-tag>
-                    <el-tag type="warning"
-                        v-else>封停</el-tag>
-     </template>
-    </el-table-column>
-    <el-table-column
-      prop="jifen"
-      label="内置积分"
-      >
-    </el-table-column>
-     <el-table-column
-      prop="date"
-      label="注册时间"
-      >
-    </el-table-column>
-    <el-table-column
-      prop="time"
-      label="最后登录时间">
-     
-    </el-table-column>
-    <el-table-column
-      prop="caozuo"
-      label="操作"
-      width="100"> -->
 
     <!-- 会员列表 -->
     <el-table
@@ -77,17 +26,17 @@
       style="width: 100%"
     >
       <el-table-column prop="id" label="ID" width="55"></el-table-column>
-      <el-table-column prop="tel" label="电话号码" width="180"></el-table-column>
-      <el-table-column prop="true_name" label="真实姓名" width="180"></el-table-column>
-      <el-table-column prop="status" label="状态" width="180">
+      <el-table-column prop="tel" label="电话号码"  ></el-table-column>
+      <el-table-column prop="true_name" label="真实姓名"  ></el-table-column>
+      <el-table-column prop="status" label="状态" >
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.status == 1">正常</el-tag>
           <el-tag type="warning" v-else>封停</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="amoney" label="内置积分" width="120"></el-table-column>
-      <el-table-column prop="add_time" label="注册时间" width="240"></el-table-column>
-      <el-table-column prop="last_login_time" label="最后登录时间" width="240"></el-table-column>
+      <el-table-column prop="amoney" label="内置积分" ></el-table-column>
+      <el-table-column prop="add_time" label="注册时间"  ></el-table-column>
+      <el-table-column prop="last_login_time" label="最后登录时间"  ></el-table-column>
       <el-table-column prop="caozuo" label="操作" width="100">
         <template slot-scope="scope">
           <el-tooltip content="设置会员是否封停" placement="top">

@@ -23,8 +23,8 @@
       <el-table-column align='center' prop="money" label="总金额"></el-table-column>
       <el-table-column align='center' prop="reduce" label="优惠金额"></el-table-column>
       <el-table-column align='center' prop="money" label="支付金额"></el-table-column>
-      <el-table-column width='200px' align='center' prop="add_date" label="添加订单时间"></el-table-column>
-      <el-table-column width='200px' align='center' prop="time" label="支付订单时间"></el-table-column>
+      <el-table-column   align='center' prop="add_date" label="添加订单时间"></el-table-column>
+      <el-table-column   align='center' prop="time" label="支付订单时间"></el-table-column>
       <el-table-column align='center' ref='qqq' prop="state" label="订单状态">
         <template slot-scope="scope">   
             <el-tag v-if='scope.row.pay_way == -1'>取消</el-tag>  
