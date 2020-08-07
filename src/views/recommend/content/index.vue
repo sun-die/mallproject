@@ -178,7 +178,7 @@ export default {
                ],
       },
       inputValue: "",
-        // imgPostUrl: ' http://www.masterjoy.top/vueapi//common/uploadImg ',
+        imgPostUrl: ' http://www.masterjoy.top/vueapi//common/uploadImg ',
       // imgPostUrl:  this.$http.+ '/common/uploadImg', //图片上传地址
       formLabelWidth: "120px",
     };

@@ -3,10 +3,10 @@
   <div class="app-container">
     <el-row>
       <el-col :span="24">
-        <div class="title" >商品分类列表</div>
+        <div class="title">商品分类列表</div>
       </el-col>
     </el-row>
-<!-- 顶部功能栏 -->
+    <!-- 顶部功能栏 -->
     <el-row>
       <el-col :span="12">
         <div class="addcate">
@@ -16,44 +16,86 @@
       <el-col :span="12">
         <div class="member-search">
           <el-input v-model="cateName" placeholder="请输入分类名"></el-input>
-          <el-button type="primary">搜索</el-button>
+          <el-button type="primary" @click="searchCate(cateName)">搜索</el-button>
         </div>
       </el-col>
     </el-row>
- <!-- 表格主体开始 -->
-    <el-table :data="tableData" style="width: 100%" border highlight-current-row>
-        <!-- 隐藏的分类属性开始 -->
+    <!-- 表格主体开始 -->
+    <el-table :data="tableData" 
+    style="width: 100%" border highlight-current-row>
+      <!-- 隐藏的分类属性开始 -->
       <el-table-column type="expand">
-        <template slot-scope="props">
+        <template slot-scope="scope">
           <el-tag type="success">商品属性1:</el-tag>
           <el-tag
-            :key="tag"
-            v-for="tag in dynamicTags"
+            :key="tag.name"
+            v-for="(tag,index) in scope.row.sku"
             closable
             :disable-transitions="false"
-            @close="handleClose(tag)"
-          >{{tag}}</el-tag>
+            @close="handleClose(scope.row,index)"
+          >{{tag.name}}</el-tag>
           <el-input
             class="input-new-tag"
             v-if="inputVisible"
             v-model="inputValue"
             ref="saveTagInput"
             size="small"
-            @keyup.enter.native="handleInputConfirm"
+            @keyup.enter.native="handleInputConfirm(scope.row,1)"
             @blur="handleInputConfirm"
           ></el-input>
           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增属性</el-button>
         </template>
         <!-- 隐藏的分类属性结束 -->
-       
       </el-table-column>
       <el-table-column align="center" label="ID" prop="id" width="60px"></el-table-column>
-      <el-table-column align="center" label="分类名" prop="name"></el-table-column>
-      <el-table-column align="center" label="排序(降序)" prop="desc" width="100px"></el-table-column>
-      <el-table-column align="center" label="添加时间" prop="time"></el-table-column>
+      <el-table-column align="center" label="分类名">
+        <template slot-scope="scope">
+          <el-input v-if="scope.row.edit" class="edit-input" size="small" v-model="scope.row.name"></el-input>
+          <span v-else>{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="排序(降序)" prop="sort" width="100px">
+        <template slot-scope="scope">
+          <el-input
+            v-if="scope.row.edit"
+            class="edit-input"
+            size="small"
+            type="number"
+            v-model.number="scope.row.sort"
+          ></el-input>
+          <span v-else>{{scope.row.sort}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="添加时间" prop="add_time"></el-table-column>
       <el-table-column align="center" label="操作" prop="id" width="400px">
-        <el-button type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
-        <el-button type="danger" icon="el-icon-close" size="mini">删除</el-button>
+        <template slot-scope="scope">
+          <el-button
+            v-if="scope.row.edit"
+            icon="el-icon-refresh"
+            size="mini"
+            type="warning"
+            @click="scope.row.edit=!scope.row.edit"
+          >取消</el-button>
+          <el-button
+            v-if="scope.row.edit"
+            icon="el-icon-circle-check-outline"
+            size="mini"
+            type="success"
+          >保存</el-button>
+          <el-button
+            v-else
+            type="primary"
+            icon="el-icon-edit"
+            size="mini"
+            @click="scope.row.edit=!scope.row.edit"
+          >编辑</el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-close"
+            size="mini"
+            @click="handleDel(scope.$index, scope.row)"
+          >删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <!--表格主体结束  -->
@@ -61,13 +103,14 @@
     <!-- 分页器开始 -->
     <div class="block">
       <el-pagination
+        background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
+        :current-page.sync="params.page"
         :page-sizes="[10, 25, 50, 100]"
-        :page-size="10"
+        :page-size.sync="params.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="8"
+        :total="total"
       ></el-pagination>
     </div>
     <!-- 分页器结束 -->
@@ -85,12 +128,13 @@
         <el-form-item label="分类名" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
+        <div>{{form.name}}</div>
         <el-form-item label="排序" prop="sort">
           <el-input v-model.number="form.sort" type="number"></el-input>
         </el-form-item>
         <el-form-item>
           <div style="float: right">
-            <el-button type="primary">提交</el-button>
+            <el-button type="primary" @click="onSubmit()">提交</el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -104,7 +148,6 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 
-
 export default {
   //import引入的组件需要注入到对象中才能使用
   name: "goods-cate",
@@ -112,17 +155,17 @@ export default {
   data() {
     //这里存放数据
     return {
-      tableData: [
-        
-      ],
-      dynamicTags: [],
+      tableData: [],
       inputVisible: false,
       inputValue: "",
-      currentPage: 1,
+      // pagesize:null,
+      // currentPage: null,
+      total:null,
       showDialog: false,
-      cateName:"",
+      cateName: "",
       params: {
         name: "",
+        pageSize:10
       },
       form: {
         name: "",
@@ -143,28 +186,19 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-    },
-    showInput() {
-      this.inputVisible = true;
-      this.$nextTick((_) => {
-        this.$refs.saveTagInput.$refs.input.focus();
+    //请求获取分类数据
+    _getData() {
+      // let _this = this;
+      this.$http.get("cate/index",{
+        params:this.params
+      }).then((res) => {
+        this.tableData = res.data.data;
+        this.total = res.data.total;
+        // _this.pageSize = res.data.per_page;
+        // _this.page = res.data.current_page;
+        console.log(this.tableData);
+        console.log(res);
       });
-    },
-    handleInputConfirm() {
-      let inputValue = this.inputValue;
-      if (inputValue) {
-        this.dynamicTags.push(inputValue);
-      }
-      this.inputVisible = false;
-      this.inputValue = "";
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
     },
     //添加顶级商品分类属性
     addCate() {
@@ -172,31 +206,105 @@ export default {
       this.form.sort = 1;
       this.showDialog = true;
     },
+    //提交商品分类顶级属性
+    onSubmit() {
+      // let _this = this;
+      this.$refs.cateForm.validate((valid) => {
+        if (!valid) {
+          return false;
+        }
+        this.$http.post("cate/addCate", this.form).then((res) => {
+          this.$message({
+            message: res.msg,
+            type: "success",
+          });
+          // this.tableData.unshift(this.form)
+          this._getData();
+          this.showDialog = false;
+        });
+      });
+    },
+
+  //搜索分类
+  searchCate(name){
+    this.$http.get('cate/index',{
+    }).then(res=>{
+      let arr=res.data.data.filter((item)=>{
+          return item.name === name
+      })
+      this.tableData = arr
+      this.total = arr.length
+    })
+  },
+
+    //删除顶级分类属性
+    handleDel(index, row) {
+      this.$confirm("是否确定删除", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$http
+          .post("cate/delCate", {
+            id: row.id,
+          })
+          .then(() => {
+            console.log(row)
+            this.$message({
+              message: "删除成功",
+              type: "success",
+            });
+            this.tableData.splice(index, 1);
+          });
+      });
+    },
+    //删除分类属性
+    handleClose(sc, index) {
+      sc.sku.splice(index, 1);
+    },
+    //编辑分类属性
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick((_) => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+    //提交分类属性
+    handleInputConfirm(sc, attr) {
+      let inputValue = this.inputValue;
+      if (inputValue) {
+        sc.sku.push({
+          name: inputValue,
+        });
+      }
+      this.inputVisible = false;
+      this.inputValue = "";
+    },
+    //取消编辑分类
+    // handleCancel(edit) {
+    //   // console.log(row.old_name);
+    //   console.log(row);
+    //   edit = false;
+    //   // row.name = row.old_name
+    //   // row.sort = row.old_sort
+    // },
+
+    handleSizeChange(val) {
+      this.params.pageSize = val
+      console.log(`每页 ${val} 条`);
+      this._getData()
+    },
+    handleCurrentChange(val) {
+      this.params.page = val
+      this._getData()
+      console.log(`当前页: ${val}`);
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-      let _this = this;
-      let arr = []
-      this.$http.get("cate/index",{
-      }).then((res)=>{
-        console.log(res)
-        res.data.data.forEach((item)=>{
-          _this.tableData.unshift({
-            id:item.id,
-            name:item.name,
-            desc:item.sort,
-            time:item.add_time
-          });
-          item.sku.forEach((items)=>{
-            arr.push(
-              items.name
-            )
-          })
-          _this.dynamicTags = arr
-        })
-      })
+     this._getData();
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
