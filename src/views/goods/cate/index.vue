@@ -310,7 +310,7 @@ export default {
       // })
       let inputValue = this.inputValue;
       if (inputValue) {
-        sc.sku.push({
+        row.sku.push({
           name: inputValue,
         });
       }
