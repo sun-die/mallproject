@@ -8,10 +8,10 @@
       label-width="100px"
       class="demo-ruleForm addform"
     >
-      <el-form-item label="管理员账号" prop="name">
+      <el-form-item label="管理员账号" prop="user_name">
         <el-input v-model="ruleForm.user_name"></el-input>
       </el-form-item>
-      <el-form-item label="设置角色" prop="region">
+      <el-form-item label="设置角色" prop="role_id">
         <el-select placeholder="请选择"  class="addinput" v-model="ruleForm.role_id">
           <!-- 循环渲染数据（必须 因为是动态的数据 且要按数据输出） -->
           <el-option v-for="(role,i) in roles"
@@ -23,7 +23,7 @@
       <el-form-item label="密码" prop="password">
         <el-input v-model="ruleForm.password"></el-input>
       </el-form-item>
-      <el-form-item label="真实姓名" prop="relname">
+      <el-form-item label="真实姓名" prop="real_name">
         <el-input v-model="ruleForm.real_name"></el-input>
       </el-form-item>
 
@@ -73,19 +73,22 @@ export default {
         roles: {},
         // 表单规则
         rules: {
-            name: [
+            user_name: [
+              { required: true, message: "必填项", trigger: "change" },
             // { required: true, message: "必填项", trigger: "change" },
-            { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+            // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
             ],
-            relname: [
+            real_name: [
+              { required: true, message: "必填项", trigger: "change" },
             // { required: true, message: "必填项", trigger: "change" },
-            { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+              //  { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
             ],
-            region: [
+            role_id: [
+              { required: true, message: "必选项", trigger: "change" },
             // { required: true, message: "必选项", trigger: "change" },
             ],
             password: [
-            { min:6, message: "最少输入六位数", trigger: "blur" },
+              { min:6, message: "最少输入六位数", trigger: "blur" },
             ],
         },
         };
