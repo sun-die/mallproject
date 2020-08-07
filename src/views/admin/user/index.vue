@@ -16,7 +16,7 @@
                 <div class="add-right">
                     <!-- 输入管理员名字搜索 含v-model -->
                     <el-input class="middleinput" placeholder="管理员用户名" clearable 
-                    v-model="queryInfo.query">
+                    v-model="params.user_name">
                     </el-input>
                     <!-- 搜索按钮 需添加功能 -->
                     <el-button type="primary" class="middlebutton" @click="search">搜索</el-button>
@@ -78,7 +78,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :page-sizes="[10,25,50,100]"
-                    :page-size="pageSize"
+                    :page-size="params.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total">
                     </el-pagination>
@@ -152,11 +152,11 @@ return {
     // 表格数据
     list:[],
     currentPage1: 5,
-    pageSize:"",
     total:0,
-    pageSize:10,
-    queryInfo: {
-        query:"",
+    params: {
+        user_name:"",
+        pageSize:10,
+        page:1,
     },
     ruleForm: {
             // 姓名
@@ -204,8 +204,9 @@ methods: {
     handleSizeChange(pageSize) {
     console.log(`每页 ${pageSize} 条`);
     },
-    handleCurrentChange(page) {
-    console.log(`当前页: ${page}`);
+    handleCurrentChange(val) {
+        this.params.page = val;
+        this.search();
     },
     // 跳转页面
     adduser:function() {
@@ -218,7 +219,7 @@ methods: {
     // },
     // 发起get请求 请求地址 获取管理数据
     getUserList() {
-       this.$http.get('/user/index',{params:this.queryInfo}).then(res=> {
+       this.$http.get('/user/index').then(res=> {
         //    console.log(res);
            this.list = res.data.data;
            this.total = res.data.total;
@@ -229,9 +230,18 @@ methods: {
            console.log(err);
        })
     },
-    // 搜索功能未完成
+    // 搜索功能完成
     search() {
-        this.getUserList();
+        this.$http.get('/user/index?user_name=' + this.params.user_name+"&pageSize=" +this.params.pageSize + "&page="+this.params.page).then(res=> {
+    //    console.log(res);
+        this.list = res.data.data;
+        this.total = res.data.total;
+        this.pageSize = res.data.per_page;
+        this.page = res.data.current_page;
+    //    console.log(this.list);
+       }).catch(err => {
+           console.log(err);
+       })
     },
 
     // 删除功能
@@ -283,9 +293,9 @@ methods: {
     },
     // 表单验证  无验证 缺少取消功能
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async(valid) => {
         if (valid) {
-            this.$http.post("/user/userEdit",this.ruleForm);
+            await this.$http.post("/user/userEdit",this.ruleForm);
             this.dialogFormVisible = false;
             this.getUserList();
         //   跳转页面

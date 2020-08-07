@@ -45,9 +45,8 @@
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="page"
                 :page-sizes="[10, 25, 50, 100]"
-                :page-size="pageSize"
+                :page-size="params.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total"
               ></el-pagination>
@@ -58,13 +57,13 @@
 
         <!-- 点击添加/编辑角色后的显示框 -->
         <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%">
-        <el-form :model="form" label-width="80px" status-icon :rules="rules">
+        <el-form :model="form" label-width="80px" status-icon :rules="rules" ref="form">
             <el-form-item label="角色名" prop="role_name">
               <el-input v-model="form.role_name"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="cancel">取 消</el-button>
           <el-button type="primary" @click="onSubmit()">确 定</el-button>
         </div>
       </el-dialog>
@@ -104,8 +103,9 @@ export default {
       input: "",
       list:[],
       // 分页
-      pageSize:10,
-      page:1,
+      params: {
+        pageSize:10,
+      },
       total:0,
       // 默认弹出框不可见
       dialogFormVisible:false,
@@ -121,9 +121,9 @@ export default {
         showDialogDistribution:false,
         // 角色输入框规定
         rules: {
-          name: [
+          role_name: [
             { required: true, message: '请添加角色名', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
           ],
         },
         tree: [], //树节点
@@ -140,8 +140,17 @@ export default {
     handleSizeChange(pageSize) {
       console.log(`每页 ${pageSize} 条`);
     },
-    handleCurrentChange(page) {
-      console.log(`当前页: ${page}`);
+    handleCurrentChange(val) {
+      this.params.page = val;
+      this.$http.get("/role/index?pageSize="+this.params.pageSize +"&page=" + this.params.page).then(res=> {
+      // console.log(res);
+      this.list = res.data.data;
+      this.form.user_name = res.data.data.role_name;
+      this.form.id = res.data.data.id;
+      this.pageSize = res.data.per_page;
+      this.page = res.data.current_page;
+      this.total = res.data.total;
+      })
     },
     addRolebutton:function() {
       this.form.role_name = "",
@@ -149,12 +158,17 @@ export default {
       this.title = "添加角色";
     },
     editorRolebutton:function(index,row) {
-      console.log(row.id);
+      // console.log(row.id);
       this.dialogFormVisible = true;
       this.title = "编辑角色";
       // 将此角色数据渲染到页面上
       this.form.role_name = row.role_name;
       this.form.id = row.id;
+    },
+    cancel() {
+      this.dialogFormVisible = false;
+      // this.form.role_name = "";
+      // this.form.id = "";
     },
     // 权限
     power:function(index,info) {
@@ -194,17 +208,21 @@ export default {
       })
     },
     // 提交功能
-    onSubmit() {
+    async onSubmit() {
       if(this.form.id==undefined) {
         // 提交时id名为空
-        this.$http.post("/role/roleAdd",this.form).then(res=> {
+        await this.$http.post("/role/roleAdd",this.form).then(res=> {
         this.dialogFormVisible = false;
         })
       }else {
-        // 更改时id名存在
-        this.$http.post("/role/roleEdit",this.form).then(res=> {
+        // 更改id名
+        await this.$http.post("/role/roleEdit",this.form).then(res=> {
           this.dialogFormVisible = false;
           this.form.id = "";
+          // this.$message({
+          //   message: res.msg,
+          //   type: 'success'
+          // })
         })
       }
       this.getRole();
