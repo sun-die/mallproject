@@ -2,16 +2,33 @@
 <template>
   <div class>
     <!-- 标题 -->
-    <el-row>
-      <el-col :span="24">
+    <el-row >
+      <el-col :span="24" >
+
         <div class="title">推荐位内容管理</div>
+
+        
       </el-col>
     </el-row>
+
     <!-- 添加按钮 -->
-    <el-row>
-      <el-col :span="24">
+    <el-row >
+      <el-col :span="24" >
         <div class="add-buttom">
           <el-button type="primary" plain @click="handleAdd()">添加推荐内容</el-button>
+        </div>
+
+         <div class="search">
+      <el-select v-model="params.cate_id" placeholder="请选择">
+    <el-option
+      v-for="(item,i) in cate"
+      :key="i"
+      :label="item.name" 
+      :value="item.id">
+
+    </el-option>
+     </el-select>
+       <el-button class="btn" type="primary" @click="handlSearch()" >搜索</el-button>
         </div>
       </el-col>
     </el-row>
@@ -21,14 +38,28 @@
       element-loading-text="加载中..."
       :data="tableData"
       border
-      :cell-style="rowClass"
+      highlight-current-row
+       
+      :cell-style="rowClass"  
       :header-cell-style="headClass"
+<<<<<<< HEAD
       style="width: 100%">
+=======
+       style="width: 100%"
+    >
+>>>>>>> 7610304e3d9134923827e113d9bc028d478c3133
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
-      <el-table-column prop="name" label="所属分类" width="200"></el-table-column>
-      <el-table-column prop="memo" label="推荐信息"></el-table-column>
-      <el-table-column prop="msg" label="推荐摘要"></el-table-column>
-      <el-table-column prop="img" label="图片"></el-table-column>
+      <el-table-column prop="pinfo.name" label="所属分类" ></el-table-column>
+      <el-table-column prop="name" label="推荐信息"></el-table-column>
+      <el-table-column prop="memo" label="推荐摘要"></el-table-column>
+      <el-table-column prop="img" label="图片">
+
+           <template slot-scope="scope">
+                    <img :src="'http://www.masterjoy.top/uploads/'+ scope.row.img"
+                        class="scope-img"
+                        v-if="scope.row.img">
+                </template>
+      </el-table-column>
       <el-table-column prop="link" label="链接"></el-table-column>
       <el-table-column prop="sort" label="排序" width="60"></el-table-column>
       <el-table-column label="操作" width="200">
@@ -39,26 +70,45 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <el-pagination :page-size="20" layout="total, prev, pager, next" :total="total"></el-pagination>
+     <el-pagination
+      @current-change="handleCurrentChange"
+      :current-page.sync="params.page"
+      :page-size="params.pageSize"
+       layout="total, prev, pager, next"
+      :total="total">
+    </el-pagination>
 
     <!-- 添加推荐位内容 -->
+
 
     <el-dialog
       title="添加推荐为内容"
       :visible.sync="dialogFormVisible"
       width="30%"
       text-align="left"
+<<<<<<< HEAD
       @submit.native.prevent>
       <el-form :model="form" ref="ruleForm" :rules="rules">
+=======
+      
+    >
+      <el-form   :model="form"  ref="cateForm" :rules="rules"
+      @submit.native.prevent
+      >
+>>>>>>> 7610304e3d9134923827e113d9bc028d478c3133
         <!-- 选择所属推荐位 -->
-        <el-form-item label="选择所属推荐位" prop="name">
-          <el-select v-model="form.name" placeholder="请选择" :label-width="formLabelWidth">
-            <el-option label="首页Banner" value="shanghai"></el-option>
+        <el-form-item label="选择所属推荐位" prop="pid">
+          <el-select v-model="form.pid" placeholder="请选择" :label-width="formLabelWidth">
+             <el-option v-for="(item,i) in cate"
+                            :key="i"
+                            :label="item.name"
+                            :value="item.id"></el-option>
+              </el-select>
           </el-select>
         </el-form-item>
         <!-- 推荐信息 -->
-        <el-form-item label="推荐信息" :label-width="formLabelWidth" prop="msg">
-          <el-input v-model="form.msg" autocomplete="off"></el-input>
+        <el-form-item label="推荐信息" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
         <!-- 推荐摘要 -->
         <el-form-item label="推荐摘要" :label-width="formLabelWidth" prop="memo">
@@ -69,25 +119,34 @@
           <el-input v-model="form.link" autocomplete="off"></el-input>
         </el-form-item>
         <!-- 推荐图片 -->
-        <el-form-item label="推荐图片" :label-width="formLabelWidth" prop="img">
+        <el-form-item label="推荐图片" :label-width="formLabelWidth"  >
           <el-upload
             :on-success="skuImgUploadSuccess"
             :show-file-list="false"
             :action="imgPostUrl"
+<<<<<<< HEAD
             list-type="pictrue"
             limit="1">
+=======
+             list-type="pictrue"
+            :limit="1"
+          >
+>>>>>>> 7610304e3d9134923827e113d9bc028d478c3133
             <el-button slot="trigger" size="small" v-if="!form.img" type="primary">选取文件</el-button>
-            <img :src="cdn+form.img" class="upload-img" v-else slot="trigger" alt />
+             <img :src="cdn + form.img"
+                            class="upload-img"
+                            v-else
+                            slot="trigger"
+                            alt="">
           </el-upload>
         </el-form-item>
         <!-- 排序 -->
-        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
-          <el-input v-model="form.sort" autocomplete="off"></el-input>
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sortd">             
+          <el-input  v-model.number="form.sortd"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <!-- <el-button @click="dialogFormVisible = false">取 消</el-button> -->
-        <el-button type="primary" @click="dialogFormVisible = false">提 交</el-button>
+        <el-button type="primary" @click=" submitAdd()">提 交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -96,7 +155,7 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+ 
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -106,26 +165,37 @@ export default {
       table_loading: false,
       tableData: [],
       dialogFormVisible: false,
-      form: {
+      cate:[],
+      params:{
+          cate_id: '',
+          pageSize:10,
+           
+      },
+      form:{
         id: "",
         pid: "",
-        name: "",
-        msg: "",
+        name: "",        
         memo: "",
         link: "",
         img: "",
-        sort: 0,
+        sortd: 0,   
       },
-      total: 0,
-      page: 1,
+     
+      total: 0,     
       isAdd: true,
       rules: {
-        name: [{ required: true, message: "请选择所属分类" }],
+        name: [{ required: true, message: "请选择所属分类" ,trigger : 'blur'}
+        ],
+         pid: [
+           { required: true, type: 'number', message: '请填写推荐信息', trigger: 'change' }
+               ],
       },
       inputValue: "",
-      imgPostUrl: "",
+        imgPostUrl: ' http://www.masterjoy.top/vueapi//common/uploadImg ',
+      // imgPostUrl:  this.$http.+ '/common/uploadImg', //图片上传地址
       formLabelWidth: "120px",
     };
+    
   },
   //监听属性 类似于data概念
   computed: {},
@@ -140,25 +210,157 @@ export default {
     rowClass() {
       return "text-align:center;";
     },
+  //  分页
+   
+      handleCurrentChange(val) {
+          this.params.page=val;
+          this._getDAta();
+        
+      },
+
+      
+// 点击添加推荐内容
     handleAdd() {
-      this.form = ["", "", "", "", "", "", "", 0];
-      this.isAdd = true;
       this.dialogFormVisible = true;
+      this.isAdd = true;
+      this.form={
+          id: "",
+        pid: "",
+        name: "",        
+        memo: "",
+        link: "",
+        img: "",
+        sortd: 0,  
+      }    
     },
+    // 点击修改
+       handleEdit(index, row) {
+        
+      this.dialogFormVisible = true;
+      this.isAdd = false;
+      this.form ={
+           id:row.id,
+           name:row.name,
+           memo:row.memo,
+           sortd:row.sort,
+           link:row.link,
+           img:row.img,                   
+           pid:row.pid,
+           pinfo:row.pinfo
+      }
+            
 
-    skuImgUploadSuccess() {},
+        },
+  //  提交添加表单
+    submitAdd(){
+        let _this=this;
+      this.$refs.cateForm.validate(valid=>{
+        if(!valid){
 
+          return false
+        }else{
+           
+        }
+        // 是否为添加
+        if(this.isAdd){
+           this.$http.post("/Recommend/addRecommendContent",{                
+                   id:this.form.id,
+                   name:this.form.name,
+                   memo:this.form.memo,
+                   sort:this.form.sortd,
+                   link:this.form.link,
+                   img:this.form.img,                   
+                   pid:this.form.pid,
+           }).then(res=>{
+
+<<<<<<< HEAD
+=======
+              this.$message({
+               message:res.msg,
+               type:'success'
+             })
+                _this._getDAta();
+                this.dialogFormVisible = false
+
+           })
+        }else{
+            // 编辑
+          this.$http.post("/Recommend/editRecommendContent",{
+                  id:this.form.id,
+                  pid:this.form.pid, 
+                  name:this.form.name,
+                  memo:this.form.memo,
+                   img:this.form.img,                 
+                   
+                   link:this.form.link,                   
+                   sort:this.form.sortd,                    
+                   pinfo:this.form.pinfo
+          }).then(res=>{
+            this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        })
+                        _this._getDAta();
+                        this.dialogFormVisible = false
+          })
+        }
+      })
+      
+
+    },
+    // 搜索
+  handlSearch(){
+        this._getDAta();
+        
+  },
+  // 图片上传
+    skuImgUploadSuccess( res, files) {
+          if (res.status == 1) {
+                this.form.img = res.data
+            }
+    },
+  // 删除
+  handleDelete(index,row){
+    let  _this=this;
+         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+           this.$http.post("/Recommend/delRecommendContent",{
+          id:row.id
+        }).then(res=>{
+              this.$message({
+            type: 'success',
+            message: '删除成功!'
+         
+          });
+          _this._getDAta();
+        }).catch(()=>{
+              this.$message({
+             type: 'info',
+             message: '删除失败!'
+            });
+        })       
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      
+  },
+  
+>>>>>>> 7610304e3d9134923827e113d9bc028d478c3133
     // 获取数据
     _getDAta() {
+       
       this.$http
-        .get("/Recommend/content", {
-          page: this.page,
-          pageSize: 20,
-        })
-        .then((res) => {
-          (this.tableData = res.data.data),
+        .get("/Recommend/content",{params:this.params})
+        .then((res) => {    
             (this.total = res.data.total),
-            (this.page = res.current_page),
+           
+            (this.tableData = res.data.data),
             (this.table_loading = false);
         })
         .catch((res) => {
@@ -175,7 +377,14 @@ export default {
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+       this.$http.get("/Recommend/index").then(res => {
+            this.cate = res.data
+        }).catch(err => {
+            console.log(err)
+        })
+
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this._getDAta();
@@ -190,18 +399,37 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.title {
+ .title {
   color: #cccccc;
   border-bottom: 1px dashed #ccc;
   text-align: left;
   padding: 10px;
 }
+ 
 .add-buttom {
   padding: 20px 0;
   text-align: left;
+  float: left;
 }
+.search{
+   padding: 20px 0;
+   float: right;
+   .btn{
+     margin-left:10px ;
+   }
+}
+<<<<<<< HEAD
 .el-pagination {
   padding: 10px;
   text-align: right;
+=======
+
+.el-pagination{
+    padding: 10px;
+    text-align: right;
+>>>>>>> 7610304e3d9134923827e113d9bc028d478c3133
+}
+.scope-img {
+    width: 53px;
 }
 </style>
