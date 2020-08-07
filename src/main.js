@@ -10,6 +10,9 @@ import store from './store'
 
 import './assets/css/global.css'
 
+// import Nprogress from "nprogress"
+// import 'nprogress/nprogress.css'
+
 import axios from './utils/myaxios'
 Vue.prototype.$http=axios
 
