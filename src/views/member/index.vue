@@ -69,7 +69,7 @@
       prop="caozuo"
       label="操作"
       width="100">
-
+    </el-table-column>
     <!-- 会员列表 -->
     <el-table
       :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
